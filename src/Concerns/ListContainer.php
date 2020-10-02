@@ -2,8 +2,8 @@
 /**
  * This code is licensed under the MIT License.
  *
+ * Copyright (c) 2018-2020 Alexey Kopytko <alexey@kopytko.com> and contributors
  * Copyright (c) 2018 Appwilio (http://appwilio.com), greabock (https://github.com/greabock), JhaoDa (https://github.com/jhaoda)
- * Copyright (c) 2018 Alexey Kopytko <alexey@kopytko.com> and contributors
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,32 +26,34 @@
 
 declare(strict_types=1);
 
-namespace CdekSDK\Responses;
+namespace CommonSDK\Concerns;
 
-use CdekSDK\Contracts\Response;
-use Psr\Http\Message\StreamInterface;
+use CommonSDK\Contracts\ItemList;
 
 /**
- * FileResponse содержит данные файла.
+ * @see ItemList
  */
-final class FileResponse implements Response
+trait ListContainer
 {
-    /** @var StreamInterface */
-    private $stream;
+    /** @var array */
+    private $list;
 
-    public function __construct(StreamInterface $stream)
+    private function __construct(array $list)
     {
-        $this->stream = $stream;
+        /** @var $this ItemList */
+        $this->list = $list;
     }
 
-    public function getBody(): StreamInterface
+    public static function getListType(): string
     {
-        return $this->stream;
+        // @phan-suppress-next-line PhanUndeclaredConstantOfClass
+        return static::LIST_TYPE;
     }
 
-    public function jsonSerialize()
+    public static function withList(array $list): self
     {
-        return (string) $this->getBody();
+        // @phan-suppress-next-line PhanTypeInstantiateTraitStaticOrSelf
+        return new self($list);
     }
 
     public function hasErrors(): bool
@@ -62,5 +64,15 @@ final class FileResponse implements Response
     public function getMessages()
     {
         return [];
+    }
+
+    public function getIterator()
+    {
+        return new \ArrayIterator($this->list);
+    }
+
+    public function count()
+    {
+        return \count($this->list);
     }
 }

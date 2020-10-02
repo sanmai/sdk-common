@@ -2,8 +2,8 @@
 /**
  * This code is licensed under the MIT License.
  *
+ * Copyright (c) 2018-2020 Alexey Kopytko <alexey@kopytko.com> and contributors
  * Copyright (c) 2018 Appwilio (http://appwilio.com), greabock (https://github.com/greabock), JhaoDa (https://github.com/jhaoda)
- * Copyright (c) 2018 Alexey Kopytko <alexey@kopytko.com> and contributors
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,23 +26,48 @@
 
 declare(strict_types=1);
 
-namespace Tests\CdekSDK;
+namespace Tests\CommonSDK\Concerns;
 
-use CdekSDK\Common\Fillable;
+use CommonSDK\Concerns\MagicSetters;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @covers \CdekSDK\Common\Fillable
+ * @covers \CommonSDK\Concerns\MagicSetters
  */
-class TraitsTest extends TestCase
+class MagicSettersTest extends TestCase
 {
-    public function test_missing_fillable_property()
+    public function test_can_set_params()
     {
-        $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('does not have the property');
+        $example = new class() {
+            use MagicSetters;
 
-        new class(['foo' => 'bar']) {
-            use Fillable;
+            public $foo;
+            public $bar;
+            public $justTesting;
         };
+
+        $example->setFoo('foo');
+        $example = $example->setBar('bar');
+        $example = $example->setJustTesting(123);
+
+        $this->assertSame([
+            'foo'         => 'foo',
+            'bar'         => 'bar',
+            'justTesting' => 123,
+        ], \get_object_vars($example));
+    }
+
+    public function test_missing_setter()
+    {
+        $example = new class() {
+            use MagicSetters;
+
+            private $foo;
+        };
+
+        $example->setFoo('foo');
+
+        $this->expectException(\BadMethodCallException::class);
+        $example->setBar('bar');
     }
 }

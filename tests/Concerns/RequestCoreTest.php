@@ -2,8 +2,8 @@
 /**
  * This code is licensed under the MIT License.
  *
+ * Copyright (c) 2018-2020 Alexey Kopytko <alexey@kopytko.com> and contributors
  * Copyright (c) 2018 Appwilio (http://appwilio.com), greabock (https://github.com/greabock), JhaoDa (https://github.com/jhaoda)
- * Copyright (c) 2018 Alexey Kopytko <alexey@kopytko.com> and contributors
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,17 +26,15 @@
 
 declare(strict_types=1);
 
-namespace Tests\CdekSDK;
+namespace Tests\CommonSDK\Concerns;
 
-use CdekSDK\Contracts\JsonRequest;
-use CdekSDK\Contracts\ParamRequest;
-use CdekSDK\Contracts\Request;
-use CdekSDK\Contracts\XmlRequest;
-use CdekSDK\Requests\Concerns\RequestCore;
+use CommonSDK\Concerns\RequestCore;
+use CommonSDK\Contracts\JsonRequest;
+use CommonSDK\Contracts\Request;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @covers \CdekSDK\Requests\Concerns\RequestCore
+ * @covers \CommonSDK\Concerns\RequestCore
  */
 class RequestCoreTest extends TestCase
 {
@@ -55,48 +53,6 @@ class RequestCoreTest extends TestCase
         $this->assertSame(RequestCoreTest::class, $instance->getResponseClassName());
     }
 
-    public function test_unrecognized_serialization_format()
-    {
-        $instance = new class() {
-            const ADDRESS = 'address';
-            const METHOD = 'HEAD';
-            const RESPONSE = RequestCoreTest::class;
-
-            use RequestCore;
-        };
-
-        $this->expectException(\BadMethodCallException::class);
-        $instance->getSerializationFormat();
-    }
-
-    public function test_serialization_xml()
-    {
-        $instance = new class() implements XmlRequest {
-            const ADDRESS = 'address';
-            const METHOD = 'HEAD';
-            const RESPONSE = RequestCoreTest::class;
-
-            use RequestCore;
-        };
-
-        $this->assertSame(Request::SERIALIZATION_XML, $instance->getSerializationFormat());
-
-        $instance = new class() implements ParamRequest {
-            const ADDRESS = 'address';
-            const METHOD = 'HEAD';
-            const RESPONSE = RequestCoreTest::class;
-
-            use RequestCore;
-
-            public function getParams(): array
-            {
-                return [];
-            }
-        };
-
-        $this->assertSame(Request::SERIALIZATION_XML, $instance->getSerializationFormat());
-    }
-
     public function test_serialization_json()
     {
         $instance = new class() implements JsonRequest {
@@ -105,11 +61,6 @@ class RequestCoreTest extends TestCase
             const RESPONSE = RequestCoreTest::class;
 
             use RequestCore;
-
-            public function getBody(): array
-            {
-                return [];
-            }
         };
 
         $this->assertSame(Request::SERIALIZATION_JSON, $instance->getSerializationFormat());

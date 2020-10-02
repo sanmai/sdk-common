@@ -2,8 +2,8 @@
 /**
  * This code is licensed under the MIT License.
  *
+ * Copyright (c) 2018-2020 Alexey Kopytko <alexey@kopytko.com> and contributors
  * Copyright (c) 2018 Appwilio (http://appwilio.com), greabock (https://github.com/greabock), JhaoDa (https://github.com/jhaoda)
- * Copyright (c) 2018 Alexey Kopytko <alexey@kopytko.com> and contributors
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,16 +26,54 @@
 
 declare(strict_types=1);
 
-namespace CdekSDK\Requests;
+namespace Tests\CommonSDK\Concerns;
 
-use JMS\Serializer\Annotation as JMS;
+use CommonSDK\Concerns\HasErrors;
+use CommonSDK\Concerns\RequestCore;
+use CommonSDK\Contracts\Response;
+use CommonSDK\Types\Message;
+use PHPUnit\Framework\TestCase;
 
 /**
- * @JMS\XmlRoot(name="DeliveryRequest")
- *
- * @psalm-suppress InvalidExtendClass
+ * @covers \CommonSDK\Concerns\HasErrors
  */
-final class AddDeliveryRequest extends DeliveryRequest
+class HasErrorsTest extends TestCase
 {
-    const ADDRESS = '/addDelivery';
+    public function test_has_no_errors()
+    {
+        $instance = new class() implements Response {
+            const ADDRESS = 'address';
+            const METHOD = 'HEAD';
+            const RESPONSE = RequestCoreTest::class;
+
+            use RequestCore;
+            use HasErrors;
+
+            public function getMessages()
+            {
+                return [];
+            }
+        };
+
+        $this->assertFalse($instance->hasErrors());
+    }
+
+    public function test_has_errors()
+    {
+        $instance = new class() implements Response {
+            const ADDRESS = 'address';
+            const METHOD = 'HEAD';
+            const RESPONSE = RequestCoreTest::class;
+
+            use RequestCore;
+            use HasErrors;
+
+            public function getMessages()
+            {
+                yield new Message('Foo', 'bar');
+            }
+        };
+
+        $this->assertTrue($instance->hasErrors());
+    }
 }

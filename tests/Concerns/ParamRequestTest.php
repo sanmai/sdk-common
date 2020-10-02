@@ -2,8 +2,8 @@
 /**
  * This code is licensed under the MIT License.
  *
+ * Copyright (c) 2018-2020 Alexey Kopytko <alexey@kopytko.com> and contributors
  * Copyright (c) 2018 Appwilio (http://appwilio.com), greabock (https://github.com/greabock), JhaoDa (https://github.com/jhaoda)
- * Copyright (c) 2018 Alexey Kopytko <alexey@kopytko.com> and contributors
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,47 +26,29 @@
 
 declare(strict_types=1);
 
-namespace CdekSDK\Responses\Types;
+namespace Tests\CommonSDK\Concerns;
 
-use CdekSDK\Contracts\HasErrorCode;
-use JMS\Serializer\Annotation as JMS;
+use CommonSDK\Concerns\ParamRequest;
+use PHPUnit\Framework\TestCase;
 
-final class Error implements HasErrorCode
+/**
+ * @covers \CommonSDK\Concerns\ParamRequest
+ */
+class ParamRequestTest extends TestCase
 {
-    /**
-     * @JMS\Type("int")
-     *
-     * @var int
-     */
-    private $code;
-
-    /**
-     * @JMS\Type("string")
-     *
-     * @var string
-     */
-    private $text;
-
-    public function getCode(): int
+    public function test_get_params()
     {
-        return $this->code;
-    }
+        $instance = new class() {
+            public $foo = null;
+            public $bar = 'a';
+            public $baz = 2;
 
-    /**
-     * @deprecated use getMessage()
-     */
-    public function getText(): string
-    {
-        return $this->getMessage();
-    }
+            use ParamRequest;
+        };
 
-    public function getErrorCode(): string
-    {
-        return (string) $this->getCode();
-    }
-
-    public function getMessage(): string
-    {
-        return $this->text;
+        $this->assertSame([
+            'bar' => 'a',
+            'baz' => 2,
+        ], $instance->getParams());
     }
 }

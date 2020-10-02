@@ -2,20 +2,11 @@ sudo: false
 
 language: php
 php:
-  - 7.0
-  - 7.1
-  - 7.2
   - 7.3
   - 7.4
   - nightly
 env:
   - GROUP=default
-
-matrix:
-  fast_finish: true
-  allow_failures:
-    - php: nightly
-    - stage: integration
 
 stages:
   - analyze
@@ -23,23 +14,12 @@ stages:
   - integration
 
 jobs:
-  exclude:
-    - php: 7.3
+  fast_finish: true
+  allow_failures:
+    - php: nightly
   include:
-    - stage: integration
-      php: 7.0
-      env:
-        - GROUP=integration
-        - CDEK_ACCOUNT=7JM7K5twfzEV1ssCRklthcIPbbVZrZrZ
-        - CDEK_PASSWORD=t8XBoL1rUofIK9dKoXVB3Tji2F2hPHSk
-    - stage: integration
-      php: 7.0
-      env:
-        - GROUP=integration
-        - CDEK_ACCOUNT=z9GRRu7FxmO53CQ9cFfI6qiy32wpfTkd
-        - CDEK_PASSWORD=w24JTCv4MnAcuRTx0oHjHLDtyt3I6IBq
     - stage: analyze
-      php: 7.3
+      php: 7.4
       install:
         - pecl install ast
         - phpenv config-rm xdebug.ini
@@ -55,9 +35,7 @@ cache:
 
 install:
   - phpenv config-rm xdebug.ini || true
-  - composer remove --no-update --dev
-      phan/phan phpstan/phpstan vimeo/psalm
-      infection/infection friendsofphp/php-cs-fixer
+  - composer remove --no-update --dev $(.ci/list-non-test-dev-deps)
   - if [[ $TRAVIS_PHP_VERSION = nightly ]]; then export COMPOSER_FLAGS="--ignore-platform-reqs"; fi
   - travis_retry composer install --prefer-dist $COMPOSER_FLAGS
 

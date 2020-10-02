@@ -1,12 +1,11 @@
-site_name: CdekSDK
+site_name: CommonSDK
 theme: readthedocs
-lang: ru
+lang: en
 
 nav:
-    - PHP SDK для API СДЭК: index.md
+    - 'User Guide': index.md
 
 markdown_extensions:
     - toc:
         permalink: True
     - attr_list
-

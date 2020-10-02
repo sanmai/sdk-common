@@ -2,8 +2,8 @@
 /**
  * This code is licensed under the MIT License.
  *
+ * Copyright (c) 2018-2020 Alexey Kopytko <alexey@kopytko.com> and contributors
  * Copyright (c) 2018 Appwilio (http://appwilio.com), greabock (https://github.com/greabock), JhaoDa (https://github.com/jhaoda)
- * Copyright (c) 2018 Alexey Kopytko <alexey@kopytko.com> and contributors
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,35 +26,28 @@
 
 declare(strict_types=1);
 
-namespace Tests\CdekSDK\Serialization;
+namespace CommonSDK\Concerns;
 
-use CdekSDK\Requests\Concerns\ParamRequest;
+use CommonSDK\Contracts\Response;
+use CommonSDK\Types\Message;
 
-/**
- * @covers \CdekSDK\Requests\Concerns\ParamRequest
- */
-class ParamRequestTest extends TestCase
+trait HasErrors
 {
-    public function test_can_get_params()
+    /**
+     * @final
+     */
+    public function hasErrors(): bool
     {
-        $example = new class() {
-            use ParamRequest;
+        /** @var Response $this */
+        /** @var Message $message */
 
-            private $foo;
-            private $bar;
-            private $null;
-
-            public function __construct()
-            {
-                $this->foo = 'foo';
-                $this->bar = false;
-                $this->null = null;
+        // @phan-suppress-next-line PhanUndeclaredMethod
+        foreach ($this->getMessages() as $message) {
+            if ($message->getErrorCode() !== null) {
+                return true;
             }
-        };
+        }
 
-        $this->assertSame([
-            'foo' => 'foo',
-            'bar' => false,
-        ], $example->getParams());
+        return false;
     }
 }

@@ -2,8 +2,8 @@
 /**
  * This code is licensed under the MIT License.
  *
+ * Copyright (c) 2018-2020 Alexey Kopytko <alexey@kopytko.com> and contributors
  * Copyright (c) 2018 Appwilio (http://appwilio.com), greabock (https://github.com/greabock), JhaoDa (https://github.com/jhaoda)
- * Copyright (c) 2018 Alexey Kopytko <alexey@kopytko.com> and contributors
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,21 +26,9 @@
 
 declare(strict_types=1);
 
-namespace CdekSDK\Requests\Concerns;
+namespace CommonSDK\Contracts;
 
-trait MagicSetters
+interface ClientBuilder
 {
-    /**
-     * @final
-     */
-    public function __call(string $name, array $arguments)
-    {
-        if (0 === \strpos($name, 'set') && \property_exists($this, $property = \lcfirst(\substr($name, 3)))) {
-            $this->{$property} = $arguments[0];
-
-            return $this;
-        }
-
-        throw new \BadMethodCallException(\sprintf('Accessor [%s] not found in [%s].', $name, __CLASS__));
-    }
+    public function build(): Client;
 }

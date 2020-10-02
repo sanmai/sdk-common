@@ -2,8 +2,8 @@
 /**
  * This code is licensed under the MIT License.
  *
+ * Copyright (c) 2018-2020 Alexey Kopytko <alexey@kopytko.com> and contributors
  * Copyright (c) 2018 Appwilio (http://appwilio.com), greabock (https://github.com/greabock), JhaoDa (https://github.com/jhaoda)
- * Copyright (c) 2018 Alexey Kopytko <alexey@kopytko.com> and contributors
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,47 +26,16 @@
 
 declare(strict_types=1);
 
-namespace Tests\CdekSDK\Common;
+namespace Tests\CommonSDK\Concerns\Fixtures;
 
-use CdekSDK\Requests\Concerns\MagicSetters;
+use CommonSDK\Concerns\ListContainer;
+use CommonSDK\Contracts\ItemList;
+use CommonSDK\Contracts\Response;
+use stdClass;
 
-/**
- * @covers \CdekSDK\Requests\Concerns\MagicSetters
- */
-class MagicSettersTest extends TestCase
+final class ListContainerExample implements ItemList, Response
 {
-    public function test_can_set_params()
-    {
-        $example = new class() {
-            use MagicSetters;
+    private const LIST_TYPE = stdClass::class;
 
-            public $foo;
-            public $bar;
-            public $justTesting;
-        };
-
-        $example->setFoo('foo');
-        $example = $example->setBar('bar');
-        $example = $example->setJustTesting(123);
-
-        $this->assertSame([
-            'foo'         => 'foo',
-            'bar'         => 'bar',
-            'justTesting' => 123,
-        ], \get_object_vars($example));
-    }
-
-    public function test_missing_setter()
-    {
-        $example = new class() {
-            use MagicSetters;
-
-            private $foo;
-        };
-
-        $example->setFoo('foo');
-
-        $this->expectException(\BadMethodCallException::class);
-        $example->setBar('bar');
-    }
+    use ListContainer;
 }

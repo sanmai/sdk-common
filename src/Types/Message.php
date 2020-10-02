@@ -2,8 +2,8 @@
 /**
  * This code is licensed under the MIT License.
  *
+ * Copyright (c) 2018-2020 Alexey Kopytko <alexey@kopytko.com> and contributors
  * Copyright (c) 2018 Appwilio (http://appwilio.com), greabock (https://github.com/greabock), JhaoDa (https://github.com/jhaoda)
- * Copyright (c) 2018 Alexey Kopytko <alexey@kopytko.com> and contributors
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,58 +26,46 @@
 
 declare(strict_types=1);
 
-namespace CdekSDK\Requests\Concerns;
+namespace CommonSDK\Types;
 
-use CdekSDK\Contracts\JsonRequest;
-use CdekSDK\Contracts\ParamRequest;
-use CdekSDK\Contracts\XmlRequest;
+use CommonSDK\Contracts\HasErrorCode;
+use function Pipeline\take;
 
-trait RequestCore
+final class Message implements HasErrorCode
 {
-    /**
-     * @phan-suppress PhanUndeclaredConstantOfClass
-     * @psalm-suppress MixedInferredReturnType
-     */
-    final public function getAddress(): string
+    /** @var string */
+    private $text;
+
+    /** @var string|null */
+    private $errorCode;
+
+    public function __construct(string $text, ?string $errorCode = null)
     {
-        return static::ADDRESS;
+        $this->text = $text;
+        $this->errorCode = $errorCode;
+    }
+
+    public function getErrorCode(): ?string
+    {
+        return $this->errorCode;
+    }
+
+    public function getMessage(): string
+    {
+        return $this->text;
     }
 
     /**
-     * @phan-suppress PhanUndeclaredConstantOfClass
-     * @psalm-suppress MixedInferredReturnType
+     * @param iterable<HasErrorCode> ...$inputs
+     *
+     * @return iterable|Message[]
      */
-    final public function getMethod(): string
+    public static function from(...$inputs): iterable
     {
-        return static::METHOD;
-    }
-
-    /**
-     * @phan-suppress PhanUndeclaredConstantOfClass
-     * @psalm-suppress MixedInferredReturnType
-     */
-    final public function getResponseClassName(): string
-    {
-        return static::RESPONSE;
-    }
-
-    /**
-     * @psalm-suppress MixedInferredReturnType
-     */
-    final public function getSerializationFormat(): string
-    {
-        if ($this instanceof XmlRequest) {
-            return $this::SERIALIZATION_XML;
-        }
-
-        if ($this instanceof JsonRequest) {
-            return $this::SERIALIZATION_JSON;
-        }
-
-        if ($this instanceof ParamRequest) {
-            return $this::SERIALIZATION_XML;
-        }
-
-        throw new \BadMethodCallException(\sprintf('Class [%s] has an unrecognized serialization format.', __CLASS__));
+        return take($inputs)->unpack()->map(function (HasErrorCode $item) {
+            if ($item->getMessage() !== '' || $item->getErrorCode() !== null) {
+                yield new Message($item->getMessage(), $item->getErrorCode());
+            }
+        });
     }
 }

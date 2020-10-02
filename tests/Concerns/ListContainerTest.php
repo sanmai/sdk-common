@@ -2,8 +2,8 @@
 /**
  * This code is licensed under the MIT License.
  *
+ * Copyright (c) 2018-2020 Alexey Kopytko <alexey@kopytko.com> and contributors
  * Copyright (c) 2018 Appwilio (http://appwilio.com), greabock (https://github.com/greabock), JhaoDa (https://github.com/jhaoda)
- * Copyright (c) 2018 Alexey Kopytko <alexey@kopytko.com> and contributors
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,25 +26,41 @@
 
 declare(strict_types=1);
 
-namespace CdekSDK\Responses\Concerns;
+namespace Tests\CommonSDK\Concerns;
 
-use CdekSDK\Contracts\Response;
+use PHPUnit\Framework\TestCase;
+use stdClass;
+use Tests\CommonSDK\Concerns\Fixtures\ListContainerExample;
 
-trait HasErrors
+/**
+ * @covers \CommonSDK\Concerns\ListContainer
+ */
+class ListContainerTest extends TestCase
 {
-    /**
-     * @final
-     */
-    public function hasErrors(): bool
+    public function test_list_container_type()
     {
-        \assert($this instanceof Response);
+        $this->assertSame(stdClass::class, ListContainerExample::getListType());
+    }
 
-        foreach ($this->getMessages() as $message) {
-            if ($message->getErrorCode() !== '') {
-                return true;
-            }
+    public function test_list_container_instance()
+    {
+        $list = ListContainerExample::withList([
+            (object) [],
+        ]);
+
+        $this->assertFalse($list->hasErrors());
+        $this->assertCount(0, $list->getMessages());
+        $this->assertCount(1, $list);
+        $this->assertSame(1, \count($list));
+
+        $this->assertInstanceOf(\Traversable::class, $list->getIterator());
+
+        foreach ($list as $item) {
+            $this->assertInstanceOf(stdClass::class, $item);
         }
 
-        return false;
+        foreach ($list->getIterator() as $item) {
+            $this->assertInstanceOf(stdClass::class, $item);
+        }
     }
 }

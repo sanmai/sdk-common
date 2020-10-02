@@ -2,8 +2,8 @@
 /**
  * This code is licensed under the MIT License.
  *
+ * Copyright (c) 2018-2020 Alexey Kopytko <alexey@kopytko.com> and contributors
  * Copyright (c) 2018 Appwilio (http://appwilio.com), greabock (https://github.com/greabock), JhaoDa (https://github.com/jhaoda)
- * Copyright (c) 2018 Alexey Kopytko <alexey@kopytko.com> and contributors
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,42 +26,21 @@
 
 declare(strict_types=1);
 
-namespace Tests\CdekSDK\Common;
+namespace CommonSDK\Concerns;
 
-use CdekSDK\Common\Fillable;
-use CdekSDK\Common\Order;
-use CdekSDK\Requests\Concerns\Authorized;
-use CdekSDK\Requests\Concerns\RequestCore;
-use CdekSDK\Requests\Templates\PrintRequest;
-use PHPUnit\Framework\TestCase;
-
-/**
- * @covers \CdekSDK\Requests\Templates\PrintRequest
- * @covers \CdekSDK\Common\Order
- */
-class PrintRequestTest extends TestCase
+trait MagicSetters
 {
-    public function test_it_rejects_order_without_dispatch_number()
+    /**
+     * @final
+     */
+    public function __call(string $name, array $arguments)
     {
-        $request = new class() extends PrintRequest {
-            use Fillable;
-            use Authorized;
-            use RequestCore;
+        if (0 === \strpos($name, 'set') && \property_exists($this, $property = \lcfirst(\substr($name, 3)))) {
+            $this->{$property} = $arguments[0];
 
-            const ADDRESS = '';
-            const METHOD = '';
-        };
+            return $this;
+        }
 
-        $request = $request->addOrder(Order::create([
-            'DispatchNumber' => 'testing',
-        ]));
-
-        $this->assertSame(1, $request->getOrderCount());
-
-        $this->expectException(\BadMethodCallException::class);
-
-        $request->addOrder(Order::create([
-            'Number' => 'invalid',
-        ]));
+        throw new \BadMethodCallException(\sprintf('Accessor [%s] not found in [%s].', $name, __CLASS__));
     }
 }

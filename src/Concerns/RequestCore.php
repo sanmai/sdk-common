@@ -2,8 +2,8 @@
 /**
  * This code is licensed under the MIT License.
  *
+ * Copyright (c) 2018-2020 Alexey Kopytko <alexey@kopytko.com> and contributors
  * Copyright (c) 2018 Appwilio (http://appwilio.com), greabock (https://github.com/greabock), JhaoDa (https://github.com/jhaoda)
- * Copyright (c) 2018 Alexey Kopytko <alexey@kopytko.com> and contributors
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,17 +26,43 @@
 
 declare(strict_types=1);
 
-namespace CdekSDK\Requests\Concerns;
+namespace CommonSDK\Concerns;
 
-trait ParamRequest
+trait RequestCore
 {
     /**
-     * @final
+     * @phan-suppress PhanUndeclaredConstantOfClass
+     * @psalm-suppress MixedInferredReturnType
      */
-    public function getParams(): array
+    public function getAddress(): string
     {
-        return \array_filter(\get_object_vars($this), function ($value) {
-            return $value !== null;
-        });
+        return static::ADDRESS;
+    }
+
+    /**
+     * @phan-suppress PhanUndeclaredConstantOfClass
+     * @psalm-suppress MixedInferredReturnType
+     */
+    public function getMethod(): string
+    {
+        return static::METHOD;
+    }
+
+    /**
+     * @phan-suppress PhanUndeclaredConstantOfClass
+     * @psalm-suppress MixedInferredReturnType
+     */
+    public function getResponseClassName(): string
+    {
+        return static::RESPONSE;
+    }
+
+    /**
+     * @phan-suppress PhanUndeclaredConstantOfClass
+     * @psalm-suppress MixedInferredReturnType
+     */
+    public function getSerializationFormat(): string
+    {
+        return static::SERIALIZATION_JSON;
     }
 }
