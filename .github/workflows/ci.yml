@@ -48,10 +48,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          composer remove --no-update --dev --no-interaction --no-progress \
-            phan/phan phpstan/phpstan vimeo/psalm \
-            infection/infection friendsofphp/php-cs-fixer \
-            php-coveralls/php-coveralls
+          composer remove --no-update --dev --no-interaction --no-progress $(.ci/list-non-test-dev-deps)
           composer update --prefer-dist --no-interaction --no-progress ${{ matrix.dependencies }}
 
       - name: Execute tests
