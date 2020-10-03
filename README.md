@@ -1,4 +1,4 @@
-# Common classes for API SDK
+# Common classes for API SDKs
 
 [![Latest Stable Version](https://poser.pugx.org/sanmai/sdk-common/v/stable)](https://packagist.org/packages/sanmai/sdk-common)
 [![Build Status](https://travis-ci.com/sanmai/sdk-common.svg?branch=master)](https://travis-ci.com/sanmai/sdk-common)
@@ -10,7 +10,7 @@
 composer require sanmai/sdk-common
 ```
 
-This SDK requires at least PHP 7.3. It was tested to work under PHP 7.3, 7.4, and 8.0.
+This SDK-for-SDKs requires at least PHP 7.3. It was tested to work under PHP 7.3, 7.4, and 8.0.
 
 ## License
 
