@@ -7,7 +7,6 @@ on:
       - main
 
 jobs:
-
   tests:
     runs-on: ubuntu-latest
 
@@ -43,14 +42,15 @@ jobs:
             composer-${{ matrix.php-version }}-
             composer-
 
-      - name: Validate composer.json
-        run: composer validate --strict
-
       - name: Install dependencies
         run: |
-          composer remove --no-update --dev --no-interaction --no-progress $(.ci/list-non-test-dev-deps)
           composer update --prefer-dist --no-interaction --no-progress ${{ matrix.dependencies }}
 
       - name: Execute tests
         run: |
           php vendor/bin/phpunit
+
+      - name: Validate composer.json
+        run: |
+          composer validate --strict
+          composer normalize --diff --dry-run
