@@ -1,7 +1,7 @@
 {
     "name": "sanmai/sdk-common",
     "type": "library",
-    "description": "Common types and contracts for PHP API SDK",
+    "description": "Common types and contracts for PHP API SDKs",
     "license": "MIT",
     "authors": [
         {
