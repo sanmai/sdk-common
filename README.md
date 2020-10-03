@@ -1,8 +1,8 @@
 # Common classes for API SDKs
 
 [![Latest Stable Version](https://poser.pugx.org/sanmai/sdk-common/v/stable)](https://packagist.org/packages/sanmai/sdk-common)
-[![Build Status](https://travis-ci.com/sanmai/sdk-common.svg?branch=master)](https://travis-ci.com/sanmai/sdk-common)
-[![Coverage Status](https://coveralls.io/repos/github/sanmai/sdk-common/badge.svg?branch=master)](https://coveralls.io/github/sanmai/sdk-common?branch=master)
+[![Build Status](https://travis-ci.com/sanmai/sdk-common.svg?branch=main)](https://travis-ci.com/sanmai/sdk-common)
+[![Coverage Status](https://coveralls.io/repos/github/sanmai/sdk-common/badge.svg?branch=main)](https://coveralls.io/github/sanmai/sdk-common?branch=main)
 
 ## Installation
 
