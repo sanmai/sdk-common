@@ -29,6 +29,7 @@ return PhpCsFixer\Config::create()
         'binary_operator_spaces' => ['operators' => ['=>' => BinaryOperatorSpacesFixer::ALIGN]],
         'strict_comparison' => true,
         'native_function_invocation' => true,
+        'phpdoc_no_alias_tag' => false,
     ])
     ->setFinder(
         PhpCsFixer\Finder::create()
