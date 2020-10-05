@@ -14,6 +14,7 @@
     "require": {
         "php": "^7.3 || ^8.0",
         "ext-json": "*",
+        "psr/http-message": "^1.0",
         "sanmai/json-serializer": "^0.1",
         "sanmai/pipeline": "^5"
     },

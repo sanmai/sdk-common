@@ -48,7 +48,7 @@ return [
     //
     // Note that the **only** effect of choosing `'5.6'` is to infer that functions removed in php 7.0 exist.
     // (See `backward_compatibility_checks` for additional options)
-    // Automatically inferred from composer.json requirement for "php" of "^7.3"
+    // Automatically inferred from composer.json requirement for "php" of "^7.3 || ^8.0"
     'target_php_version' => '7.3',
 
     // If enabled, missing properties will be created when
@@ -343,6 +343,7 @@ return [
         'src',
         'vendor/jms/serializer/src',
         'vendor/phpunit/phpunit/src',
+        'vendor/psr/http-message/src',
         'vendor/sanmai/json-serializer/src',
         'vendor/sanmai/pipeline/src',
     ],
