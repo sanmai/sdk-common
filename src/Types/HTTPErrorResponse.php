@@ -57,6 +57,11 @@ final class HTTPErrorResponse implements Response, ResponseInterface
         yield new Message($this->response->getReasonPhrase(), (string) $this->response->getStatusCode());
     }
 
+    /**
+     * @codeCoverageIgnore
+     *
+     * @deprecated to be removed in 0.2
+     */
     public function jsonSerialize()
     {
         return [];
