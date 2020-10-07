@@ -342,10 +342,14 @@ return [
     'directory_list' => [
         'src',
         'vendor/jms/serializer/src',
+        'vendor/gamez/psr-testlogger/src',
+        'vendor/guzzlehttp/guzzle/src',
         'vendor/phpunit/phpunit/src',
         'vendor/psr/http-message/src',
+        'vendor/psr/log/Psr/Log',
         'vendor/sanmai/json-serializer/src',
         'vendor/sanmai/pipeline/src',
+        'vendor/symfony/http-foundation',
     ],
 
     // A list of individual files to include in analysis
