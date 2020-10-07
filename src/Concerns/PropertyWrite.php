@@ -37,6 +37,12 @@ trait PropertyWrite
      */
     public function __set(string $property, $value)
     {
+        if (\method_exists($this, 'set'.$property)) {
+            $this->{'set'.$property}($value);
+
+            return;
+        }
+
         $this->{$property} = $value;
     }
 }

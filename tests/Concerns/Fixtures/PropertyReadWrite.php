@@ -34,6 +34,7 @@ use CommonSDK\Concerns\PropertyWrite;
 /**
  * @property-read int $bar
  * @property-write int $foo
+ * @property-write int $fooProxy
  */
 final class PropertyReadWrite
 {
@@ -46,5 +47,10 @@ final class PropertyReadWrite
     public function getFoo(): int
     {
         return $this->foo;
+    }
+
+    public function setFooProxy(int $value)
+    {
+        $this->foo = $value;
     }
 }

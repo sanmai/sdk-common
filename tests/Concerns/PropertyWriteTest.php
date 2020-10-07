@@ -36,11 +36,19 @@ use Tests\CommonSDK\Concerns\Fixtures\PropertyReadWrite;
  */
 class PropertyWriteTest extends TestCase
 {
-    public function test_property_read()
+    public function test_property_write()
     {
         $instance = new PropertyReadWrite();
         $instance->foo = 42;
 
         $this->assertSame(42, $instance->getFoo());
+    }
+
+    public function test_property_proxy_setter()
+    {
+        $instance = new PropertyReadWrite();
+        $instance->fooProxy = 99;
+
+        $this->assertSame(99, $instance->getFoo());
     }
 }
