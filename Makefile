@@ -34,17 +34,17 @@ PHPSTAN_ARGS=analyse src tests --level=2 -c .phpstan.neon
 # Psalm
 PSALM=vendor/bin/psalm
 PSALM_ARGS=--show-info=false
-PSALM_PHP_VERSION="PHP 7.2"
+PSALM_PHP_VERSION="PHP 7.3"
 
 # Composer
 COMPOSER=$(PHP) $(shell which composer)
 
 # Infection
 INFECTION=vendor/bin/infection
-MIN_MSI=96
-MIN_COVERED_MSI=99
+MIN_MSI=100
+MIN_COVERED_MSI=100
 INFECTION_ARGS=--min-msi=$(MIN_MSI) --min-covered-msi=$(MIN_COVERED_MSI) --threads=$(JOBS) --coverage=build/logs --log-verbosity=default --show-mutations --no-interaction
-INFECTION_PHP_VERSION="PHP 7.2"
+INFECTION_PHP_VERSION="PHP 7.3"
 
 all: test
 
@@ -61,7 +61,6 @@ ci-analyze: prerequisites ci-phpunit ci-infection ci-phan ci-phpstan ci-psalm
 
 ci-phpunit: ci-cs
 	$(SILENT) $(PHPDBG) $(PHPUNIT) $(PHPUNIT_ARGS)
-	cp build/logs/junit.xml build/logs/phpunit.junit.xml
 
 ci-infection: ci-phpunit
 	$(SILENT) $(PHP) $(INFECTION) $(INFECTION_ARGS)
@@ -95,7 +94,6 @@ test-prerequisites: prerequisites composer.lock
 .PHONY: phpunit
 phpunit: cs
 	$(SILENT) $(PHP) $(PHPUNIT) $(PHPUNIT_ARGS) --verbose
-	cp build/logs/junit.xml build/logs/phpunit.junit.xml
 	CI=true $(SILENT) $(PHP) $(INFECTION) $(INFECTION_ARGS)
 
 .PHONY: analyze
@@ -148,7 +146,7 @@ report-php-version:
 # Quick development testing procedure                        #
 ##############################################################
 
-PHP_VERSIONS=php7.0 php7.3
+PHP_VERSIONS=php7.3 php7.4
 
 .PHONY: quick
 quick:

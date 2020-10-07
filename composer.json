@@ -29,7 +29,7 @@
         "phpstan/phpstan": ">=0.10",
         "phpunit/phpunit": "^9.3",
         "psr/log": ">=1.1",
-        "symfony/http-foundation": "^4 || ^5.0.7",
+        "symfony/http-foundation": "^4.4.7 || ^5.0.7",
         "vimeo/psalm": ">=3.0.16"
     },
     "config": {
