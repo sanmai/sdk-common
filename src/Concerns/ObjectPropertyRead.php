@@ -45,5 +45,7 @@ trait ObjectPropertyRead
         }
 
         \trigger_error(\sprintf('Undefined property: %s::$%s', \get_called_class(), $property), E_USER_NOTICE);
+
+        return null;
     }
 }

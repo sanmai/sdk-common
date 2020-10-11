@@ -47,6 +47,13 @@ class ObjectPropertyReadTest extends TestCase
         $instance->private;
     }
 
+    public function test_it_returns_null_for_inaccessible_properties()
+    {
+        $instance = new ObjectProperty();
+
+        $this->assertNull(@$instance->private);
+    }
+
     public function test_it_causes_notice_for_invalid_properties()
     {
         $instance = new ObjectProperty();
