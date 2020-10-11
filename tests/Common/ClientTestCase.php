@@ -119,6 +119,10 @@ abstract class ClientTestCase extends TestCase implements Concerns\ClientTestCas
         $this->assertSame(1, $logger->log->countRecordsWithContextKey('exception'));
         $this->assertSame(1, $logger->log->countRecordsWithContextKey('error_code'));
 
+        foreach ($logger->log->onlyWithContextKey('error_code') as $log) {
+            $this->assertSame('400', $log->context->values['error_code']);
+        }
+
         $this->assertInstanceOf(Response::class, $response);
 
         $this->assertCount(\count($errors), $response->getMessages());
