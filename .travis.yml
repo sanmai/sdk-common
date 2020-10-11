@@ -40,7 +40,7 @@ install:
 script:
   - make ci-test --keep-going PHPUNIT_GROUP=$GROUP
   - git archive --format=tar HEAD | tar t | grep tests/Common || exit 1
-  - git archive --format=tar HEAD | tar t | grep tests | tail +2 | grep -v Common || exit 1
+  - git archive --format=tar HEAD | tar t | grep tests | tail -n +2 | grep -v Common || exit 1
 
 after_success:
   - travis_retry php vendor/bin/php-coveralls
