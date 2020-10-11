@@ -31,17 +31,15 @@ namespace Tests\CommonSDK\Types;
 
 use CommonSDK\Contracts\Request;
 use CommonSDK\Contracts\Response;
+use CommonSDK\Tests\Common\ClientTestCase;
 use CommonSDK\Types\FileResponse;
 use Gamez\Psr\Log\TestLogger;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Exception\ServerException;
 use JSONSerializer\Serializer;
-use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\StreamInterface;
 use Psr\Log\LogLevel;
 use RuntimeException;
 use Tests\CommonSDK\Types\Fixtures\ExampleJsonRequest;
@@ -52,52 +50,9 @@ use Tests\CommonSDK\Types\Fixtures\TestClient;
 /**
  * @covers \CommonSDK\Types\Client
  */
-class ClientTest extends TestCase
+class ClientTest extends ClientTestCase
 {
-    private const DEFAULT_JSON = '{}';
-
-    private $lastRequestOptions = [];
-
-    /**
-     * @return MockObject|ResponseInterface
-     */
-    private function getResponse(string $contentType = 'application/json', string $responseBody = self::DEFAULT_JSON, array $extraHeaders = [])
-    {
-        $extraHeaders['Content-Type'] = $contentType;
-
-        $response = $this->createMock(ResponseInterface::class);
-        $response->method('hasHeader')->will($this->returnCallback(function ($headerName) use ($extraHeaders) {
-            return \array_key_exists($headerName, $extraHeaders);
-        }));
-        $response->method('getHeader')->will($this->returnCallback(function ($headerName) use ($extraHeaders) {
-            return [$extraHeaders[$headerName]];
-        }));
-
-        $stream = $this->createMock(StreamInterface::class);
-        $stream->method('__toString')->willReturn($responseBody);
-        $response->method('getBody')->willReturn($stream);
-
-        return $response;
-    }
-
-    /**
-     * @return MockObject|ClientInterface
-     */
-    private function getHttpClient(string $contentType = 'application/json', string $responseBody = self::DEFAULT_JSON, array $extraHeaders = [])
-    {
-        $response = $this->getResponse($contentType, $responseBody, $extraHeaders);
-
-        $http = $this->createMock(ClientInterface::class);
-        $http->method('request')->will($this->returnCallback(function ($method, $address, array $options) use ($response) {
-            $this->lastRequestOptions = $options;
-
-            return $response;
-        }));
-
-        return $http;
-    }
-
-    private function newClient(ClientInterface $http = null): TestClient
+    public function newClient(ClientInterface $http = null): TestClient
     {
         $http = $http ?? $this->createMock(ClientInterface::class);
 
@@ -230,46 +185,15 @@ class ClientTest extends TestCase
         $this->assertSame('Server error', $response->getReasonPhrase());
     }
 
-    public function errorResponsesProvider()
+    public function errorResponsesProvider(): iterable
     {
-        yield 'BadRequest' => ['application/json', '{"code":"ERROR","message":"Bad Request"}', 400, 'ERROR', 'Bad Request'];
+        yield 'BadRequest' => ['BadRequest.json', 400, [
+            ['ERROR', 'Bad Request'],
+        ]];
 
-        yield 'Alternative Content-Type' => ['text/x-json', '{"code":"ERROR","message":"Bad Request"}', 400, 'ERROR', 'Bad Request'];
-    }
-
-    /**
-     * @dataProvider errorResponsesProvider
-     */
-    public function test_client_can_handle_error_response(string $contentType, string $jsonResponse, int $statusCode, string $errorCode, string $messageText)
-    {
-        $client = $this->newClient($http = $this->getHttpClient());
-        $client->setLogger($logger = new TestLogger());
-
-        $responseMock = $this->getResponse($contentType, $jsonResponse);
-        $responseMock->method('getStatusCode')->willReturn($statusCode);
-
-        $http->method('request')->will($this->returnCallback(function () use ($responseMock) {
-            throw new ServerException('', $this->createMock(RequestInterface::class), $responseMock);
-        }));
-
-        $response = $client->sendRequest($this->createMock(Request::class));
-        $this->assertSame(4, $logger->log->countRecordsWithLevel(LogLevel::DEBUG));
-        $this->assertTrue($logger->log->hasRecordsWithPartialMessage('API responded with an HTTP error code'));
-
-        $this->assertSame(1, $logger->log->countRecordsWithContextKey('exception'));
-        $this->assertSame(1, $logger->log->countRecordsWithContextKey('error_code'));
-
-        foreach ($logger->log->onlyWithContextKey('error_code') as $log) {
-            $this->assertSame('400', $log->context->values['error_code']);
-        }
-
-        $this->assertInstanceOf(Response::class, $response);
-
-        $this->assertCount(1, $response->getMessages());
-        foreach ($response->getMessages() as $message) {
-            $this->assertSame($errorCode, $message->getErrorCode());
-            $this->assertSame($messageText, $message->getMessage());
-        }
+        yield 'Alternative Content-Type' => ['Content-Type.json', 400, [
+            ['ERROR', 'Bad Request'],
+        ], 'text/x-json'];
     }
 
     public function test_fails_on_unknown_method()
@@ -307,5 +231,10 @@ class ClientTest extends TestCase
             $contentType,
             @$this->lastRequestOptions['headers']['Content-Type']
         );
+    }
+
+    public function loadFixture($filename): string
+    {
+        return '{"code":"ERROR","message":"Bad Request"}';
     }
 }

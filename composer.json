@@ -51,6 +51,7 @@
     },
     "autoload-dev": {
         "psr-4": {
+            "CommonSDK\\Tests\\Common\\": "tests/Common/",
             "Tests\\CommonSDK\\": "tests/"
         }
     }
