@@ -53,13 +53,13 @@ all: test
 ##############################################################
 
 ci-test: SILENT=
-ci-test: prerequisites
+ci-test: prerequisites $(PHPUNIT)
 	$(SILENT) $(PHPDBG) $(PHPUNIT) $(PHPUNIT_COVERAGE_CLOVER) --verbose --group=$(PHPUNIT_GROUP)
 
 ci-analyze: SILENT=
 ci-analyze: prerequisites ci-phpunit ci-infection ci-phan ci-phpstan ci-psalm
 
-ci-phpunit: ci-cs
+ci-phpunit: ci-cs $(PHPUNIT)
 	$(SILENT) $(PHPDBG) $(PHPUNIT) $(PHPUNIT_ARGS)
 
 ci-infection: ci-phpunit
@@ -122,6 +122,8 @@ cs: test-prerequisites
 # We need both vendor/autoload.php and composer.lock being up to date
 .PHONY: prerequisites
 prerequisites: report-php-version build/cache vendor/autoload.php .phan composer.lock
+
+$(PHPUNIT): prerequisites
 
 # Do install if there's no 'vendor'
 vendor/autoload.php:
