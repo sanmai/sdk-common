@@ -39,7 +39,8 @@ use Symfony\Component\HttpFoundation\Response as HttpCodes;
 class TestClient extends Client
 {
     protected const ERROR_CODE_RESPONSE_CLASS_MAP = [
-        HttpCodes::HTTP_BAD_REQUEST => ErrorResponse::class, // 400
+        HttpCodes::HTTP_BAD_REQUEST  => ErrorResponse::class, // 400
+        HttpCodes::HTTP_UNAUTHORIZED => ErrorResponse::class, // 401
     ];
 
     protected function isTextResponse(string $header): bool

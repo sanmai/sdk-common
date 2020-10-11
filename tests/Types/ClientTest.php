@@ -191,7 +191,7 @@ class ClientTest extends ClientTestCase
             ['ERROR', 'Bad Request'],
         ]];
 
-        yield 'Alternative Content-Type' => ['Content-Type.json', 400, [
+        yield 'Alternative Content-Type' => ['Content-Type.json', 401, [
             ['ERROR', 'Bad Request'],
         ], 'text/x-json'];
     }
