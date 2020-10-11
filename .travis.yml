@@ -33,7 +33,6 @@ cache:
 
 install:
   - phpenv config-rm xdebug.ini || true
-  - composer remove --no-update --dev $(.ci/list-non-test-dev-deps)
   - if [[ $TRAVIS_PHP_VERSION = nightly ]]; then export COMPOSER_FLAGS="--ignore-platform-reqs"; fi
   - travis_retry composer install --prefer-dist $COMPOSER_FLAGS
 

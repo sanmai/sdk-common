@@ -1,9 +1,0 @@
-#!/bin/bash
-
-(
-	(
-		composer show --name-only --direct --no-dev
-		composer show --name-only --direct
-	) | xargs -n1 | sort | uniq -u
-	composer config extra.test-only-require | jq -r '.[]'
-) | sort | uniq -u
