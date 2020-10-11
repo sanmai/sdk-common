@@ -58,7 +58,7 @@ ci-test: prerequisites $(PHPUNIT)
 	$(SILENT) $(PHPDBG) $(PHPUNIT) $(PHPUNIT_COVERAGE_CLOVER) --verbose --group=$(PHPUNIT_GROUP)
 
 ci-analyze: SILENT=
-ci-analyze: prerequisites ci-phpunit ci-infection ci-phan ci-phpstan ci-psalm
+ci-analyze: prerequisites ci-phpunit ci-infection ci-phan ci-phpstan ci-psalm ci-git-archive
 
 ci-phpunit: ci-cs $(PHPUNIT)
 	$(SILENT) $(PHPDBG) $(PHPUNIT) $(PHPUNIT_ARGS)
@@ -77,6 +77,10 @@ ci-psalm: ci-cs
 
 ci-cs: prerequisites
 	$(SILENT) $(PHP) $(PHP_CS_FIXER) $(PHP_CS_FIXER_ARGS) --dry-run --stop-on-violation fix
+
+ci-git-archive:
+	@if ! git archive --format=tar HEAD | tar t | grep -q tests/Common; then echo "tests/Common not found in the release archive"; exit 1; fi
+	@if git archive --format=tar HEAD | tar t | grep tests | tail -n +2 | grep -qv Common; then echo "Found files that should not belong to the release archive"; exit 1; fi
 
 ##############################################################
 # Development Workflow                                       #
