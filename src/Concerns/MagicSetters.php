@@ -28,6 +28,9 @@ declare(strict_types=1);
 
 namespace CommonSDK\Concerns;
 
+/**
+ * @deprecated use PropertyWrite
+ */
 trait MagicSetters
 {
     /**
