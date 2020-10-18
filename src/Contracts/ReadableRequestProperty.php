@@ -26,26 +26,15 @@
 
 declare(strict_types=1);
 
-namespace CommonSDK\Concerns;
+namespace CommonSDK\Contracts;
 
-use CommonSDK\Contracts\ReadableRequestProperty;
+use CommonSDK\Concerns\ObjectPropertyRead;
 
 /**
- * A PropertyWrite facilitator: allows reading object-like properties typed as ReadableRequestProperty.
+ * Property-like object, used in pre-filled fields in request objects.
+ *
+ * @see ObjectPropertyRead
  */
-trait ObjectPropertyRead
+interface ReadableRequestProperty
 {
-    /**
-     * @final
-     */
-    public function __get(string $property)
-    {
-        if ($this->{$property} instanceof ReadableRequestProperty) {
-            return $this->{$property};
-        }
-
-        \trigger_error(\sprintf('Undefined property: %s::$%s', \get_called_class(), $property), E_USER_NOTICE);
-
-        return null;
-    }
 }

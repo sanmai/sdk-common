@@ -34,7 +34,8 @@ use CommonSDK\Concerns\ObjectPropertyRead;
  * Property-like object, used in pre-filled fields in request objects.
  *
  * @see ObjectPropertyRead
+ * @deprecated use ReadableRequestProperty
  */
-interface Property
+interface Property extends ReadableRequestProperty
 {
 }
