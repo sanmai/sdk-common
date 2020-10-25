@@ -170,13 +170,7 @@ abstract class Client implements ClientContract
 
     private function serialize(Request $request): string
     {
-        $requestBody = $this->serializer->serialize($request, Request::SERIALIZATION_JSON);
-
-        if ($this->logger) {
-            $this->logger->debug($requestBody);
-        }
-
-        return $requestBody;
+        return $this->serializer->serialize($request, Request::SERIALIZATION_JSON);
     }
 
     private function hasAttachment(ResponseInterface $response): bool

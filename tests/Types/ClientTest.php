@@ -115,7 +115,7 @@ class ClientTest extends ClientTestCase
         /** @var $response ExampleResponse */
         $this->assertInstanceOf(ExampleResponse::class, $response);
 
-        $this->assertSame(5, $logger->log->countRecordsWithLevel(LogLevel::DEBUG));
+        $this->assertSame(4, $logger->log->countRecordsWithLevel(LogLevel::DEBUG));
         $this->assertSame(1, $logger->log->countRecordsWithContextKey('content-type'));
 
         $this->assertTrue($logger->log->hasRecordsWithMessage('{}'));
