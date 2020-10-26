@@ -341,6 +341,7 @@ return [
     // your application should be included in this list.
     'directory_list' => [
         'src',
+        'vendor/doctrine/collections/lib',
         'vendor/jms/serializer/src',
         'vendor/gamez/psr-testlogger/src',
         'vendor/guzzlehttp/guzzle/src',
