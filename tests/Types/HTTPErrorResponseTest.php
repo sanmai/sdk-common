@@ -38,7 +38,7 @@ use Psr\Http\Message\StreamInterface;
  */
 class HTTPErrorResponseTest extends TestCase
 {
-    public function test_create()
+    public function test_create(): void
     {
         $response = HTTPErrorResponse::withHTTPResponse(new class() implements ResponseInterface {
             public function withStatus($code, $reasonPhrase = '')
@@ -137,7 +137,82 @@ class HTTPErrorResponseTest extends TestCase
         $this->assertSame(1000, $response->getProtocolVersion());
         $this->assertSame(502, $response->getStatusCode());
         $this->assertSame(['e', 'f'], $response->withAddedHeader('e', 'f'));
+    }
 
-        return $response;
+    public function test_not_an_error(): void
+    {
+        $response = HTTPErrorResponse::withHTTPResponse(new class() implements ResponseInterface {
+            public function withStatus($code, $reasonPhrase = '')
+            {
+                return [$code, $reasonPhrase];
+            }
+
+            public function hasHeader($name)
+            {
+                return true;
+            }
+
+            public function getHeaders()
+            {
+                return ['foo' => 'bar'];
+            }
+
+            public function getBody()
+            {
+                return 'foo';
+            }
+
+            public function withProtocolVersion($version)
+            {
+                return $version;
+            }
+
+            public function withoutHeader($name)
+            {
+                return $name;
+            }
+
+            public function getHeaderLine($name)
+            {
+                return $name;
+            }
+
+            public function withHeader($name, $value)
+            {
+                return [$name, $value];
+            }
+
+            public function withBody(StreamInterface $body)
+            {
+                return $body;
+            }
+
+            public function getReasonPhrase()
+            {
+                return 'Bad Gateway Testing 123';
+            }
+
+            public function getHeader($name)
+            {
+                return $name;
+            }
+
+            public function getProtocolVersion()
+            {
+                return 1000;
+            }
+
+            public function getStatusCode()
+            {
+                return 200;
+            }
+
+            public function withAddedHeader($name, $value)
+            {
+                return [$name, $value];
+            }
+        });
+
+        $this->assertFalse($response->hasErrors());
     }
 }

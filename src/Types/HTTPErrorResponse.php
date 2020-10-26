@@ -31,6 +31,7 @@ namespace CommonSDK\Types;
 use CommonSDK\Contracts\Response;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
+use Symfony\Component\HttpFoundation\Response as HttpResponse;
 
 final class HTTPErrorResponse implements Response, ResponseInterface
 {
@@ -49,7 +50,7 @@ final class HTTPErrorResponse implements Response, ResponseInterface
 
     public function hasErrors(): bool
     {
-        return true;
+        return $this->response->getStatusCode() !== HttpResponse::HTTP_OK;
     }
 
     public function getMessages()
