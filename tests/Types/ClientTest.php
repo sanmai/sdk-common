@@ -42,6 +42,7 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LogLevel;
 use RuntimeException;
+use Tests\CommonSDK\Types\Fixtures\ExampleJsonParamRequest;
 use Tests\CommonSDK\Types\Fixtures\ExampleJsonRequest;
 use Tests\CommonSDK\Types\Fixtures\ExampleParamRequest;
 use Tests\CommonSDK\Types\Fixtures\ExampleResponse;
@@ -208,7 +209,8 @@ class ClientTest extends ClientTestCase
     {
         yield 'GET' => [new ExampleParamRequest('GET'), 'query'];
         yield 'POST' => [new ExampleParamRequest('POST'), 'form_params'];
-        yield 'PUT' => [new ExampleJsonRequest(), 'body', 'application/json'];
+        yield 'PATCH' => [new ExampleJsonRequest(), 'body', 'application/json'];
+        yield 'PUT' => [new ExampleJsonParamRequest(), 'query', 'application/json'];
     }
 
     /**

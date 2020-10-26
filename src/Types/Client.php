@@ -208,6 +208,27 @@ abstract class Client implements ClientContract
             ]);
         }
 
+        if ($request instanceof JsonRequest) {
+            $requestBody = $this->serialize($request);
+
+            if ($this->logger) {
+                $this->logger->debug($requestBody);
+            }
+
+            $options = [
+                RequestOptions::BODY    => $requestBody,
+                RequestOptions::HEADERS => [
+                    self::CONTENT_TYPE => self::JSON_CONTENT_TYPE,
+                ],
+            ];
+
+            if ($request instanceof ParamRequest) {
+                $options[RequestOptions::QUERY] = $request->getParams();
+            }
+
+            return $options;
+        }
+
         if ($request instanceof ParamRequest) {
             if ($request->getMethod() === 'GET') {
                 return [
@@ -217,21 +238,6 @@ abstract class Client implements ClientContract
 
             return [
                 RequestOptions::FORM_PARAMS => $request->getParams(),
-            ];
-        }
-
-        if ($request instanceof JsonRequest) {
-            $requestBody = $this->serialize($request);
-
-            if ($this->logger) {
-                $this->logger->debug($requestBody);
-            }
-
-            return [
-                RequestOptions::BODY    => $requestBody,
-                RequestOptions::HEADERS => [
-                    self::CONTENT_TYPE => self::JSON_CONTENT_TYPE,
-                ],
             ];
         }
 
