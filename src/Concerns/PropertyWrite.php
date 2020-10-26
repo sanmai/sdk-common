@@ -28,6 +28,8 @@ declare(strict_types=1);
 
 namespace CommonSDK\Concerns;
 
+use CommonSDK\Types\ArrayProperty;
+
 trait PropertyWrite
 {
     /**
@@ -39,6 +41,12 @@ trait PropertyWrite
     {
         if (\method_exists($this, 'set'.$property)) {
             $this->{'set'.$property}($value);
+
+            return;
+        }
+
+        if ($this->{$property} instanceof ArrayProperty) {
+            $this->{$property} = new ArrayProperty($value);
 
             return;
         }

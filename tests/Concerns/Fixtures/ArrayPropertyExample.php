@@ -26,38 +26,37 @@
 
 declare(strict_types=1);
 
-namespace Tests\CommonSDK\Concerns;
+namespace Tests\CommonSDK\Concerns\Fixtures;
 
-use PHPUnit\Framework\TestCase;
-use Tests\CommonSDK\Concerns\Fixtures\ArrayPropertyExample;
-use  Tests\CommonSDK\Concerns\Fixtures\PropertyReadWrite;
+use CommonSDK\Concerns\MagicSetters;
+use CommonSDK\Concerns\ObjectPropertyRead;
+use CommonSDK\Concerns\PropertyWrite;
+use CommonSDK\Concerns\RequestCore;
+use CommonSDK\Contracts\JsonRequest;
+use CommonSDK\Types\ArrayProperty;
+use Doctrine\Common\Collections\ArrayCollection;
+use JMS\Serializer\Annotation as JMS;
+use JsonSerializable;
 
 /**
- * @covers \CommonSDK\Concerns\PropertyWrite
+ * @property-write int[] $array
  */
-class PropertyWriteTest extends TestCase
+final class ArrayPropertyExample
 {
-    public function test_property_write()
-    {
-        $instance = new PropertyReadWrite();
-        $instance->foo = 42;
+    use PropertyWrite;
 
-        $this->assertSame(42, $instance->getFoo());
+    /**
+     * @var ArrayProperty<int>
+     */
+    private $array;
+
+    public function __construct()
+    {
+        $this->array = new ArrayProperty();
     }
 
-    public function test_property_proxy_setter()
+    public function toArray(): array
     {
-        $instance = new PropertyReadWrite();
-        $instance->fooProxy = 99;
-
-        $this->assertSame(99, $instance->getFoo());
-    }
-
-    public function test_property_array()
-    {
-        $instance = new ArrayPropertyExample();
-        $instance->array = [1, 2, 3];
-
-        $this->assertSame([1, 2, 3], $instance->toArray());
+        return $this->array->toArray();
     }
 }
