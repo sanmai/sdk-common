@@ -208,14 +208,16 @@ abstract class Client implements ClientContract
             ]);
         }
 
-        $options = [];
-
         if ($request instanceof ParamRequest) {
-            $options[
-                $request->getMethod() === 'GET' ?
-                    RequestOptions::QUERY :
-                    RequestOptions::FORM_PARAMS
-            ] = $request->getParams();
+            if ($request->getMethod() === 'GET') {
+                return [
+                    RequestOptions::QUERY => $request->getParams(),
+                ];
+            }
+
+            return [
+                RequestOptions::FORM_PARAMS => $request->getParams(),
+            ];
         }
 
         if ($request instanceof JsonRequest) {
@@ -225,13 +227,15 @@ abstract class Client implements ClientContract
                 $this->logger->debug($requestBody);
             }
 
-            $options[RequestOptions::BODY] = $requestBody;
-            $options[RequestOptions::HEADERS] = [
+            return [
+                RequestOptions::BODY    => $requestBody,
+                RequestOptions::HEADERS => [
                     self::CONTENT_TYPE => self::JSON_CONTENT_TYPE,
+                ],
             ];
         }
 
-        return $options;
+        return [];
     }
 
     private const CONTENT_DISPOSITION_ATTACHEMENT = 'attachment';
