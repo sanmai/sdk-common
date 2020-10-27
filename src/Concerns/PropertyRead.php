@@ -35,6 +35,10 @@ trait PropertyRead
      */
     public function __get(string $property)
     {
+        if (\method_exists($this, 'get'.$property)) {
+            return $this->{'get'.$property}();
+        }
+
         return $this->{$property};
     }
 }

@@ -41,5 +41,6 @@ class PropertyReadTest extends TestCase
         $instance = new PropertyReadWrite();
 
         $this->assertSame(2, $instance->bar);
+        $this->assertSame(3, $instance->baz);
     }
 }
