@@ -44,6 +44,7 @@ class FileResponseTest extends TestCase
 
         $response = new FileResponse($stream);
         $this->assertSame('testing', (string) $response->getBody());
+        $this->assertSame('testing', (string) $response);
         $this->assertSame('testing', $response->jsonSerialize());
 
         $this->assertFalse($response->hasErrors());

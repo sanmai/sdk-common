@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace CommonSDK\Types;
 
+use CommonSDK\Contracts\HasErrorCode;
 use CommonSDK\Contracts\Response;
 use Psr\Http\Message\StreamInterface;
 
@@ -49,6 +50,14 @@ final class FileResponse implements Response
         return $this->stream;
     }
 
+    public function __toString()
+    {
+        return (string) $this->getBody();
+    }
+
+    /**
+     * @deprecated
+     */
     public function jsonSerialize()
     {
         return (string) $this->getBody();
@@ -59,6 +68,9 @@ final class FileResponse implements Response
         return false;
     }
 
+    /**
+     * @return iterable|HasErrorCode[]
+     */
     public function getMessages()
     {
         return [];
