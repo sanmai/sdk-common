@@ -145,14 +145,14 @@ abstract class Client implements ClientContract
     {
         $contentType = $this->getContentTypeHeader($response);
 
-        if ($this->logger) {
+        if ($this->logger && $contentType !== null) {
             $this->logger->debug('Content-Type: {content-type}', [
                 'content-type' => $contentType,
             ]);
         }
 
-        if (!$this->isTextResponse($contentType)) {
-            if ($this->hasAttachment($response)) {
+        if (!$this->isTextResponse($contentType ?? '')) {
+            if ($this->hasAttachment($response, $contentType)) {
                 return new FileResponse($response->getBody());
             }
 
@@ -173,8 +173,12 @@ abstract class Client implements ClientContract
         return $this->serializer->serialize($request, Request::SERIALIZATION_JSON);
     }
 
-    private function hasAttachment(ResponseInterface $response): bool
+    private function hasAttachment(ResponseInterface $response, ?string $contentType): bool
     {
+        if (self::OCTET_STREAM_TYPE === $contentType) {
+            return true;
+        }
+
         if (!$response->hasHeader(self::CONTENT_DISPOSITION)) {
             return false;
         }
@@ -185,13 +189,13 @@ abstract class Client implements ClientContract
         );
     }
 
-    private function getContentTypeHeader(ResponseInterface $response): string
+    private function getContentTypeHeader(ResponseInterface $response): ?string
     {
         if ($response->hasHeader(self::CONTENT_TYPE)) {
             return $response->getHeader(self::CONTENT_TYPE)[0];
         }
 
-        return '';
+        return null;
     }
 
     protected function isTextResponse(string $header): bool
@@ -246,6 +250,7 @@ abstract class Client implements ClientContract
 
     private const CONTENT_DISPOSITION_ATTACHEMENT = 'attachment';
     private const JSON_CONTENT_TYPE = 'application/json';
+    private const OCTET_STREAM_TYPE = 'application/octet-stream';
     private const CONTENT_TYPE = 'Content-Type';
     private const CONTENT_DISPOSITION = 'Content-Disposition';
 }

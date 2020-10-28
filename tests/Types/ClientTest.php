@@ -83,6 +83,18 @@ class ClientTest extends ClientTestCase
         $this->assertEmpty($this->lastRequestOptions);
     }
 
+    public function test_client_can_handle_binary_responses()
+    {
+        $client = $this->newClient($this->getHttpClient('application/octet-stream', '%PDF'));
+        $response = $client->sendRequest($this->createMock(Request::class));
+        $this->assertInstanceOf(FileResponse::class, $response);
+
+        \assert($response instanceof FileResponse);
+
+        $this->assertSame('%PDF', (string) $response->getBody());
+        $this->assertEmpty($this->lastRequestOptions);
+    }
+
     public function test_client_can_log_param_request()
     {
         $client = $this->newClient($this->getHttpClient());
@@ -165,11 +177,12 @@ class ClientTest extends ClientTestCase
         }));
 
         $response = $client->sendRequest($this->createMock(Request::class));
-        $this->assertSame(3, $logger->log->countRecordsWithLevel(LogLevel::DEBUG));
+        $this->assertSame(2, $logger->log->countRecordsWithLevel(LogLevel::DEBUG));
         $this->assertTrue($logger->log->hasRecordsWithPartialMessage('API responded with an HTTP error code'));
 
         $this->assertSame(1, $logger->log->countRecordsWithContextKey('exception'));
         $this->assertSame(1, $logger->log->countRecordsWithContextKey('error_code'));
+        $this->assertSame(0, $logger->log->countRecordsWithContextKey('content-type'));
 
         $this->assertInstanceOf(Response::class, $response);
 
