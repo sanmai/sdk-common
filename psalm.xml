@@ -17,12 +17,12 @@
     <extraFiles>
     </extraFiles>
 
-    <issueHandlers><!--
-        <MissingReturnType>
-            <errorLevel type="suppress">
-               <directory name="tests" />
+    <issueHandlers>
+        <MethodSignatureMismatch>
+            <errorLevel type="info">
+               <file name="src/Concerns/ListContainer.php" />
             </errorLevel>
-        </MissingReturnType> -->
+        </MethodSignatureMismatch>
 
         <MissingConstructor>
             <errorLevel type="suppress">
