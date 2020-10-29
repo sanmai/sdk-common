@@ -73,7 +73,8 @@ trait ListContainer
     }
 
     /**
-     * @return \ArrayIterator<array-key, object>
+     * @return \ArrayIterator<object>
+     * @psalm-return \ArrayIterator<array-key, object>
      */
     public function getIterator()
     {
