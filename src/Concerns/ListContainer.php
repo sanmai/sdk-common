@@ -52,7 +52,7 @@ trait ListContainer
     }
 
     /**
-     * @param array<mixed> $list
+     * @param array<object> $list
      *
      * @return static
      */

@@ -11,5 +11,43 @@
         <ignoreFiles>
             <directory name="vendor" />
         </ignoreFiles>
+        <directory name="tests/Types/Fixtures" />
+        <directory name="tests/Concerns/Fixtures" />
     </projectFiles>
+    <extraFiles>
+    </extraFiles>
+
+    <issueHandlers><!--
+        <MissingReturnType>
+            <errorLevel type="suppress">
+               <directory name="tests" />
+            </errorLevel>
+        </MissingReturnType> -->
+
+        <MissingConstructor>
+            <errorLevel type="suppress">
+               <directory name="tests" />
+            </errorLevel>
+        </MissingConstructor>
+
+        <DeprecatedTrait>
+            <errorLevel type="suppress">
+               <directory name="tests" />
+            </errorLevel>
+        </DeprecatedTrait>
+
+        <DeprecatedInterface>
+            <errorLevel type="suppress">
+               <directory name="tests" />
+            </errorLevel>
+        </DeprecatedInterface>
+
+        <DeprecatedClass>
+            <errorLevel type="suppress">
+               <directory name="tests" />
+            </errorLevel>
+        </DeprecatedClass>
+
+
+    </issueHandlers>
 </psalm>

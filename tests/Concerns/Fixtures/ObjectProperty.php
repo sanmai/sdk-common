@@ -42,13 +42,16 @@ final class ObjectProperty
 {
     use ObjectPropertyRead;
 
+    /** @var Property */
     private $example;
 
+    /** @var int */
     private $private = 1;
 
     public function __construct()
     {
         $this->example = new class() implements Property {
+            /** @var bool */
             public $foo = true;
         };
     }

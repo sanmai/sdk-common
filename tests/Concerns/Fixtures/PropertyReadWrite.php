@@ -42,7 +42,9 @@ final class PropertyReadWrite
     use PropertyRead;
     use PropertyWrite;
 
+    /** @var int */
     private $foo = 1;
+    /** @var int */
     private $bar = 2;
 
     public function getFoo(): int
@@ -50,12 +52,12 @@ final class PropertyReadWrite
         return $this->foo;
     }
 
-    public function setFooProxy(int $value)
+    public function setFooProxy(int $value): void
     {
         $this->foo = $value;
     }
 
-    public function getBaz()
+    public function getBaz(): int
     {
         return 3;
     }
