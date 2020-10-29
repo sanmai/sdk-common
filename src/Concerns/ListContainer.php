@@ -31,26 +31,32 @@ namespace CommonSDK\Concerns;
 use CommonSDK\Contracts\ItemList;
 
 /**
+ * @psalm-implements ItemList
+ *
  * @see ItemList
  */
 trait ListContainer
 {
-    /** @var array */
     private $list;
 
     private function __construct(array $list)
     {
-        /** @var $this ItemList */
         $this->list = $list;
     }
 
+    /** @return class-string */
     public static function getListType(): string
     {
         // @phan-suppress-next-line PhanUndeclaredConstantOfClass
         return static::LIST_TYPE;
     }
 
-    public static function withList(array $list): self
+    /**
+     * @param array<mixed> $list
+     *
+     * @return static
+     */
+    public static function withList(array $list)
     {
         // @phan-suppress-next-line PhanTypeInstantiateTraitStaticOrSelf
         return new self($list);
@@ -66,6 +72,9 @@ trait ListContainer
         return [];
     }
 
+    /**
+     * @return \ArrayIterator<array-key, object>
+     */
     public function getIterator()
     {
         return new \ArrayIterator($this->list);

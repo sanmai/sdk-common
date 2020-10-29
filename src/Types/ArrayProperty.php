@@ -33,6 +33,9 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Array-like request property.
+ *
+ * @template T
+ * @template-impelements array<T>
  */
 final class ArrayProperty extends ArrayCollection implements ReadableRequestProperty
 {

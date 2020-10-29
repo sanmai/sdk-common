@@ -30,5 +30,8 @@ namespace CommonSDK\Contracts;
 
 interface Client
 {
+    /**
+     * @return Response
+     */
     public function sendRequest(Request $request);
 }

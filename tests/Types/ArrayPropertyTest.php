@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace Tests\CommonSDK\Types;
 
+use CommonSDK\Types\ArrayProperty;
 use JSONSerializer\Serializer;
 use PHPUnit\Framework\TestCase;
 use Tests\CommonSDK\Types\Fixtures\ExampleWithArrayProperty;
@@ -37,6 +38,9 @@ use Tests\CommonSDK\Types\Fixtures\ExampleWithArrayProperty;
  */
 class ArrayPropertyTest extends TestCase
 {
+    /** @var ArrayProperty<int> */
+    private $array;
+
     public function test_it_does_not_serializes_to_anything_when_empty()
     {
         $serializer = new Serializer();

@@ -40,6 +40,7 @@ use JMS\Serializer\SerializerInterface;
 use JSONSerializer\Serializer;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerAwareTrait;
+use Psr\Log\LoggerInterface;
 
 /**
  * Common JSON API SDK Client.
@@ -58,6 +59,9 @@ abstract class Client implements ClientContract
 
     /** @var SerializerInterface|Serializer */
     private $serializer;
+
+    /** @var LoggerInterface|null */
+    protected $logger;
 
     public function __construct(ClientInterface $http, SerializerInterface $serializer)
     {
@@ -139,7 +143,10 @@ abstract class Client implements ClientContract
     }
 
     /**
+     * @psalm-suppress MissingReturnType
+     *
      * @param class-string $responseClassName
+     * @throws \TypeError
      */
     private function deserializeResponse(ResponseInterface $response, string $responseClassName, string $serializationFormat)
     {

@@ -56,6 +56,7 @@ final class FileResponse implements Response
     }
 
     /**
+     * @psalm-suppress MissingReturnType
      * @deprecated
      */
     public function jsonSerialize()
