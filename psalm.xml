@@ -18,7 +18,7 @@
     </extraFiles>
 
     <issueHandlers>
-        <MethodSignatureMismatch>
+        <MethodSignatureMismatch> <!-- https://github.com/vimeo/psalm/issues/4451 -->
             <errorLevel type="info">
                <file name="src/Concerns/ListContainer.php" />
             </errorLevel>
