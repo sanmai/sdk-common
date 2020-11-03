@@ -16,3 +16,4 @@
 /mkdocs.yml                export-ignore
 /tests/Concerns            export-ignore
 /tests/Types               export-ignore
+/tests/Contracts           export-ignore
