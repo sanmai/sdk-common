@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace CommonSDK\Concerns;
 
+use CommonSDK\Contracts\HasErrorCode;
 use CommonSDK\Contracts\ItemList;
 
 /**
@@ -67,6 +68,10 @@ trait ListContainer
         return false;
     }
 
+    /**
+     * @return iterable|HasErrorCode[]
+     * @psalm-return iterable<HasErrorCode>
+     */
     public function getMessages()
     {
         return [];
