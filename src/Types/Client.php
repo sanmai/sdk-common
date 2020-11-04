@@ -54,10 +54,6 @@ abstract class Client implements ClientContract
         // \Symfony\Component\HttpFoundation\Response::HTTP_FORBIDDEN   => OtherErrorResponse::class, // 403
     ];
 
-    protected const LOG_HEADERS = [
-        // 'X-Request-ID',
-    ];
-
     /** @var ClientInterface */
     private $http;
 
@@ -123,16 +119,6 @@ abstract class Client implements ClientContract
         if ($this->logger && $contentType !== null) {
             $this->logger->debug('Content-Type: {content-type}', [
                 'content-type' => $contentType,
-            ]);
-        }
-
-        foreach (static::LOG_HEADERS as $header) {
-            if (!$headers = $response->getHeader($header)) {
-                continue;
-            }
-
-            $this->logger->debug("{$header}: {{$header}}", [
-                $header => $headers[0],
             ]);
         }
     }
