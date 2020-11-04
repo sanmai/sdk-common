@@ -54,6 +54,10 @@ abstract class Client implements ClientContract
         // \Symfony\Component\HttpFoundation\Response::HTTP_FORBIDDEN   => OtherErrorResponse::class, // 403
     ];
 
+    protected const LOG_HEADERS = [
+        // 'X-Request-ID',
+    ];
+
     /** @var ClientInterface */
     private $http;
 
@@ -77,7 +81,7 @@ abstract class Client implements ClientContract
     public function sendRequest(Request $request)
     {
         try {
-            $response = $this->http->request(
+            $httpResponse = $this->http->request(
                 $request->getMethod(),
                 $request->getAddress(),
                 $this->extractOptions($request)
@@ -90,16 +94,15 @@ abstract class Client implements ClientContract
                 ]);
             }
 
-            $response = $exception->getResponse();
-
-            if ($badResponse = $this->deserializeBadResponse($response)) {
-                return $badResponse;
-            }
-
-            // Handling $response in common handler below.
+            $httpResponse = $exception->getResponse();
+            // Handling the $httpResponse in the common handler below.
         }
 
-        return $this->deserialize($request, $response);
+        $response = $this->deserialize($request, $httpResponse);
+
+        $this->postDeserialize($httpResponse, $response);
+
+        return $response;
     }
 
     /** @phan-suppress PhanDeprecatedFunction */
@@ -113,6 +116,27 @@ abstract class Client implements ClientContract
         throw new \BadMethodCallException(\sprintf('Method [%s] not found in [%s].', $name, __CLASS__));
     }
 
+    abstract protected function postDeserialize(ResponseInterface $httpResponse, Response $response): void;
+
+    protected function preDeserialize(ResponseInterface $response, string $responseClassName, ?string $contentType): void
+    {
+        if ($this->logger && $contentType !== null) {
+            $this->logger->debug('Content-Type: {content-type}', [
+                'content-type' => $contentType,
+            ]);
+        }
+
+        foreach (static::LOG_HEADERS as $header) {
+            if (!$headers = $response->getHeader($header)) {
+                continue;
+            }
+
+            $this->logger->debug("{$header}: {{$header}}", [
+                $header => $headers[0],
+            ]);
+        }
+    }
+
     /**
      * @psalm-suppress InvalidReturnStatement
      * @psalm-suppress InvalidReturnType
@@ -122,6 +146,10 @@ abstract class Client implements ClientContract
      */
     private function deserialize(Request $request, ResponseInterface $response): Response
     {
+        if ($badResponse = $this->deserializeBadResponse($response)) {
+            return $badResponse;
+        }
+
         return $this->deserializeResponse(
             $response,
             $request->getResponseClassName(),
@@ -151,11 +179,7 @@ abstract class Client implements ClientContract
     {
         $contentType = $this->getContentTypeHeader($response);
 
-        if ($this->logger && $contentType !== null) {
-            $this->logger->debug('Content-Type: {content-type}', [
-                'content-type' => $contentType,
-            ]);
-        }
+        $this->preDeserialize($response, $responseClassName, $contentType);
 
         if (!$this->isTextResponse($contentType ?? '')) {
             if ($this->hasAttachment($response, $contentType)) {

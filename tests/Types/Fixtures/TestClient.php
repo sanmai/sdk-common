@@ -28,7 +28,9 @@ declare(strict_types=1);
 
 namespace Tests\CommonSDK\Types\Fixtures;
 
+use CommonSDK\Contracts\Response;
 use CommonSDK\Types\Client;
+use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\HttpFoundation\Response as HttpCodes;
 
 /**
@@ -50,5 +52,14 @@ class TestClient extends Client
         }
 
         return parent::isTextResponse($header);
+    }
+
+    protected function postDeserialize(ResponseInterface $httpResponse, Response $response): void
+    {
+    }
+
+    protected function preDeserialize(ResponseInterface $response, string $responseClassName, ?string $contentType): void
+    {
+        parent::preDeserialize($response, $responseClassName, $contentType);
     }
 }
