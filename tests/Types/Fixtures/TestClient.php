@@ -54,12 +54,21 @@ class TestClient extends Client
         return parent::isTextResponse($header);
     }
 
+    /** @var int */
+    public $postDeserializeHasBeenCalled = 0;
+
     protected function postDeserialize(ResponseInterface $httpResponse, Response $response): void
     {
+        ++$this->postDeserializeHasBeenCalled;
     }
+
+    /** @var int */
+    public $preDeserializeHasBeenCalled = 0;
 
     protected function preDeserialize(ResponseInterface $response, string $responseClassName, ?string $contentType): void
     {
+        ++$this->preDeserializeHasBeenCalled;
+
         parent::preDeserialize($response, $responseClassName, $contentType);
     }
 }

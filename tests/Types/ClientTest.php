@@ -137,6 +137,9 @@ class ClientTest extends ClientTestCase
 
         $this->assertSame(1, $logger->log->countRecordsWithContextKey('method'));
         $this->assertSame(1, $logger->log->countRecordsWithContextKey('location'));
+
+        $this->assertSame(1, $client->postDeserializeHasBeenCalled);
+        $this->assertSame(1, $client->preDeserializeHasBeenCalled);
     }
 
     public function test_client_can_pass_through_common_exceptions()
