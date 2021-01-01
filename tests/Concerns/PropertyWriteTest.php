@@ -30,7 +30,7 @@ namespace Tests\CommonSDK\Concerns;
 
 use PHPUnit\Framework\TestCase;
 use Tests\CommonSDK\Concerns\Fixtures\ArrayPropertyExample;
-use  Tests\CommonSDK\Concerns\Fixtures\PropertyReadWrite;
+use Tests\CommonSDK\Concerns\Fixtures\PropertyReadWrite;
 
 /**
  * @covers \CommonSDK\Concerns\PropertyWrite
