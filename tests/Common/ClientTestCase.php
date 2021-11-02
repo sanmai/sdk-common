@@ -31,7 +31,6 @@ namespace CommonSDK\Tests\Common;
 use CommonSDK\Contracts\HasErrorCode;
 use CommonSDK\Contracts\Request;
 use CommonSDK\Contracts\Response;
-use Gamez\Psr\Log\TestLogger;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\ServerException;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -41,6 +40,7 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 use Psr\Log\LogLevel;
+use Psr\Log\Test\TestLogger;
 
 abstract class ClientTestCase extends TestCase implements Concerns\ClientTestCase
 {
@@ -113,14 +113,18 @@ abstract class ClientTestCase extends TestCase implements Concerns\ClientTestCas
         }));
 
         $response = $client->sendRequest($this->createMock(Request::class));
-        $this->assertSame(4, $logger->log->countRecordsWithLevel(LogLevel::DEBUG));
-        $this->assertTrue($logger->log->hasRecordsWithPartialMessage('API responded with an HTTP error code'));
+        $this->assertTrue($logger->hasDebugRecords());
 
-        $this->assertSame(1, $logger->log->countRecordsWithContextKey('exception'));
-        $this->assertSame(1, $logger->log->countRecordsWithContextKey('error_code'));
+        $this->assertSame(4, $this->countRecordsWithLevel($logger, LogLevel::DEBUG));
+        $this->assertTrue($logger->hasDebugThatContains('API responded with an HTTP error code'));
 
-        foreach ($logger->log->onlyWithContextKey('error_code') as $log) {
-            $this->assertSame((string) $statusCode, $log->context->values['error_code']);
+        $this->assertSame(1, $this->countRecordsWithContextKey($logger, 'exception'));
+        $this->assertSame(1, $this->countRecordsWithContextKey($logger, 'error_code'));
+
+        foreach ($logger->records as $record) {
+            if (\array_key_exists('error_code', $record['context'])) {
+                $this->assertSame((string) $statusCode, $record['context']['error_code']);
+            }
         }
 
         $this->assertInstanceOf(Response::class, $response);
@@ -133,5 +137,23 @@ abstract class ClientTestCase extends TestCase implements Concerns\ClientTestCas
                 $this->assertSame($expected[1], $message->getMessage());
             })
         );
+    }
+
+    protected function countRecordsWithLevel(TestLogger $logger, string $level): int
+    {
+        return \count($logger->recordsByLevel[$level]);
+    }
+
+    protected function countRecordsWithContextKey(TestLogger $logger, string $key): int
+    {
+        $count = 0;
+
+        foreach ($logger->records as $record) {
+            if (\array_key_exists($key, $record['context'])) {
+                ++$count;
+            }
+        }
+
+        return $count;
     }
 }

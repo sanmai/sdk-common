@@ -33,7 +33,6 @@ use CommonSDK\Contracts\Request;
 use CommonSDK\Contracts\Response;
 use CommonSDK\Tests\Common\ClientTestCase;
 use CommonSDK\Types\FileResponse;
-use Gamez\Psr\Log\TestLogger;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Exception\ServerException;
@@ -41,6 +40,7 @@ use JSONSerializer\Serializer;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LogLevel;
+use Psr\Log\Test\TestLogger;
 use RuntimeException;
 use Tests\CommonSDK\Types\Fixtures\ExampleJsonParamRequest;
 use Tests\CommonSDK\Types\Fixtures\ExampleJsonRequest;
@@ -106,14 +106,21 @@ class ClientTest extends ClientTestCase
         /** @var $response ExampleResponse */
         $this->assertInstanceOf(ExampleResponse::class, $response);
 
-        $this->assertSame(3, $logger->log->countRecordsWithLevel(LogLevel::DEBUG));
-        $this->assertSame(1, $logger->log->countRecordsWithContextKey('content-type'));
+        $this->assertSame(3, $this->countRecordsWithLevel($logger, LogLevel::DEBUG));
+        $this->assertSame(1, $this->countRecordsWithContextKey($logger, 'content-type'));
 
-        $this->assertTrue($logger->log->hasRecordsWithMessage(self::DEFAULT_JSON));
-        $this->assertTrue($logger->log->hasRecordsWithPartialMessage('example/request'));
+        $this->assertTrue($logger->hasDebugThatContains(self::DEFAULT_JSON));
 
-        $this->assertSame(1, $logger->log->countRecordsWithContextKey('method'));
-        $this->assertSame(1, $logger->log->countRecordsWithContextKey('location'));
+        $this->assertTrue($logger->hasDebug([
+            'message' => '{method} {location}',
+            'context' => [
+                'method'       => 'GET',
+                'location'     => '/example/request',
+            ],
+        ]));
+
+        $this->assertSame(1, $this->countRecordsWithContextKey($logger, 'method'));
+        $this->assertSame(1, $this->countRecordsWithContextKey($logger, 'location'));
     }
 
     public function test_client_can_log_json_response()
@@ -128,15 +135,22 @@ class ClientTest extends ClientTestCase
         /** @var $response ExampleResponse */
         $this->assertInstanceOf(ExampleResponse::class, $response);
 
-        $this->assertSame(4, $logger->log->countRecordsWithLevel(LogLevel::DEBUG));
-        $this->assertSame(1, $logger->log->countRecordsWithContextKey('content-type'));
+        $this->assertSame(4, $this->countRecordsWithLevel($logger, LogLevel::DEBUG));
+        $this->assertSame(1, $this->countRecordsWithContextKey($logger, 'content-type'));
 
-        $this->assertTrue($logger->log->hasRecordsWithMessage('{}'));
-        $this->assertTrue($logger->log->hasRecordsWithMessage(self::DEFAULT_JSON));
-        $this->assertTrue($logger->log->hasRecordsWithMessage('PUT /json'));
+        $this->assertTrue($logger->hasDebugThatContains('{}'));
+        $this->assertTrue($logger->hasDebugThatContains(self::DEFAULT_JSON));
 
-        $this->assertSame(1, $logger->log->countRecordsWithContextKey('method'));
-        $this->assertSame(1, $logger->log->countRecordsWithContextKey('location'));
+        $this->assertTrue($logger->hasDebug([
+            'message' => '{method} {location}',
+            'context' => [
+                'method'       => 'PUT',
+                    'location' => '/json',
+            ],
+        ]));
+
+        $this->assertSame(1, $this->countRecordsWithContextKey($logger, 'method'));
+        $this->assertSame(1, $this->countRecordsWithContextKey($logger, 'location'));
 
         $this->assertSame(1, $client->postDeserializeHasBeenCalled);
         $this->assertSame(1, $client->preDeserializeHasBeenCalled);
@@ -180,12 +194,13 @@ class ClientTest extends ClientTestCase
         }));
 
         $response = $client->sendRequest($this->createMock(Request::class));
-        $this->assertSame(2, $logger->log->countRecordsWithLevel(LogLevel::DEBUG));
-        $this->assertTrue($logger->log->hasRecordsWithPartialMessage('API responded with an HTTP error code'));
 
-        $this->assertSame(1, $logger->log->countRecordsWithContextKey('exception'));
-        $this->assertSame(1, $logger->log->countRecordsWithContextKey('error_code'));
-        $this->assertSame(0, $logger->log->countRecordsWithContextKey('content-type'));
+        $this->assertSame(2, $this->countRecordsWithLevel($logger, LogLevel::DEBUG));
+        $this->assertTrue($logger->hasDebugThatContains('API responded with an HTTP error code'));
+
+        $this->assertSame(1, $this->countRecordsWithContextKey($logger, 'exception'));
+        $this->assertSame(1, $this->countRecordsWithContextKey($logger, 'error_code'));
+        $this->assertSame(0, $this->countRecordsWithContextKey($logger, 'content-type'));
 
         $this->assertInstanceOf(Response::class, $response);
 
