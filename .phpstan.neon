@@ -1,3 +1,4 @@
 parameters:
 	ignoreErrors:
-		- '#undefined.*class@anonymous#'
+		- '#[Uu]ndefined.*[Aa]nonymous#'
+		- '#Variable \$this in PHPDoc tag @var does not match any variable#'
