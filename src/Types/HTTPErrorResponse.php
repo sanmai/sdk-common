@@ -59,17 +59,6 @@ final class HTTPErrorResponse implements Response, ResponseInterface
     }
 
     /**
-     * @psalm-suppress MissingReturnType
-     * @codeCoverageIgnore
-     *
-     * @deprecated to be removed in 0.2
-     */
-    public function jsonSerialize()
-    {
-        return [];
-    }
-
-    /**
      * @psalm-suppress MixedArgument
      * @psalm-suppress LessSpecificReturnStatement
      *

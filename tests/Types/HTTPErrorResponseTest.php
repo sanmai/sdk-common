@@ -137,6 +137,7 @@ class HTTPErrorResponseTest extends TestCase
         $this->assertSame(1000, $response->getProtocolVersion());
         $this->assertSame(502, $response->getStatusCode());
         $this->assertSame(['e', 'f'], $response->withAddedHeader('e', 'f'));
+        $this->assertSame('{}', \json_encode($response));
     }
 
     public function test_not_an_error(): void
