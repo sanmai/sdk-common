@@ -34,7 +34,7 @@
     },
     "config": {
         "sort-packages": true,
-        "allow-plugins": true,
+        "allow-plugins": true
     },
     "extra": {
         "branch-alias": {
