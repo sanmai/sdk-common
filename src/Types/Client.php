@@ -60,9 +60,6 @@ abstract class Client implements ClientContract
     /** @var SerializerInterface|Serializer */
     private $serializer;
 
-    /** @var LoggerInterface|null */
-    protected $logger;
-
     public function __construct(ClientInterface $http, SerializerInterface $serializer)
     {
         $this->http = $http;
