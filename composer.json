@@ -21,7 +21,7 @@
         "sanmai/pipeline": "^5 || ^6"
     },
     "require-dev": {
-        "ergebnis/composer-normalize": "^2.8.2",
+        "ergebnis/composer-normalize": "^2.42",
         "friendsofphp/php-cs-fixer": "^2.16.4",
         "infection/infection": ">=0.18",
         "phan/phan": "^3.2.3 || ^4.0.0 || ^5.0.0",
