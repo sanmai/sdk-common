@@ -30,8 +30,10 @@ namespace Tests\CommonSDK\Types;
 
 use CommonSDK\Types\HTTPErrorResponse;
 use PHPUnit\Framework\TestCase;
+use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
+use Symfony\Component\HttpFoundation\Response as HttpResponse;
 
 /**
  * @covers \CommonSDK\Types\HTTPErrorResponse
@@ -40,77 +42,104 @@ class HTTPErrorResponseTest extends TestCase
 {
     public function test_create(): void
     {
-        $response = HTTPErrorResponse::withHTTPResponse(new class() implements ResponseInterface {
-            public function withStatus($code, $reasonPhrase = '')
-            {
-                return [$code, $reasonPhrase];
+        $body = $this->createMock(StreamInterface::class);
+
+        $response = HTTPErrorResponse::withHTTPResponse(new class($body) implements ResponseInterface {
+
+            private int $status_code = HttpResponse::HTTP_BAD_GATEWAY;
+            private string $status_reason = 'Bad Gateway Testing 123';
+            private string $version = '1.1';
+            private array $headers = ['foo' => ['bar']];
+            private StreamInterface $body;
+
+            public function __construct(StreamInterface $body) {
+                $this->body = $body;
             }
 
-            public function hasHeader($name)
+            public function withStatus(int $code, string $reasonPhrase = ''): ResponseInterface
             {
-                return true;
+                $new = clone $this;
+                $new->status_code = $code;
+                $new->status_reason = $reasonPhrase;
+                return $new;
             }
 
-            public function getHeaders()
+            public function hasHeader(string $name): bool
             {
-                return ['foo' => 'bar'];
+                return isset($this->headers[$name]);
             }
 
-            public function getBody()
+            public function getHeaders(): array
             {
-                return 'foo';
+                return $this->headers;
             }
 
-            public function withProtocolVersion($version)
+            public function getBody(): StreamInterface
             {
-                return $version;
+                return $this->body;
             }
 
-            public function withoutHeader($name)
+            public function withProtocolVersion(string $version): MessageInterface
             {
-                return $name;
+                $new = clone $this;
+                $new->version = $version;
+                return $new;
             }
 
-            public function getHeaderLine($name)
+            public function withoutHeader(string $name): MessageInterface
             {
-                return $name;
+                $new = clone $this;
+                unset($new->headers[$name]);
+                return $new;
             }
 
-            public function withHeader($name, $value)
+            public function getHeaderLine(string $name): string
             {
-                return [$name, $value];
+                return isset($this->headers[$name]) ? implode(', ', $this->headers[$name]) : '';
             }
 
-            public function withBody(StreamInterface $body)
+            public function withHeader(string $name, $value): MessageInterface
             {
-                return $body;
+                $new = clone $this;
+                $new->headers[$name] = is_array($value) ? $value : [$value];
+                return $new;
             }
 
-            public function getReasonPhrase()
+            public function withBody(StreamInterface $body): MessageInterface
             {
-                return 'Bad Gateway Testing 123';
+                $new = clone $this;
+                $new->body = $body;
+                return $new;
             }
 
-            public function getHeader($name)
+            public function getReasonPhrase(): string
             {
-                return $name;
+                return $this->status_reason;
             }
 
-            public function getProtocolVersion()
+            public function getHeader(string $name): array
             {
-                return 1000;
+                return $this->headers[$name] ?? [];
             }
 
-            public function getStatusCode()
+            public function getProtocolVersion(): string
             {
-                return 502;
+                return $this->version;
             }
 
-            public function withAddedHeader($name, $value)
+            public function getStatusCode(): int
             {
-                return [$name, $value];
+                return $this->status_code;
+            }
+
+            public function withAddedHeader(string $name, $value): MessageInterface
+            {
+                $new = clone $this;
+                $new->headers[$name] = is_array($value) ? $value : [$value];
+                return $new;
             }
         });
+
 
         $this->assertTrue($response->hasErrors());
         $this->assertCount(1, $response->getMessages());
@@ -121,22 +150,40 @@ class HTTPErrorResponseTest extends TestCase
 
         $this->assertSame(502, $response->getStatusCode());
         $this->assertSame('Bad Gateway Testing 123', $response->getReasonPhrase());
-        $this->assertSame(['a', 'b'], $response->withStatus('a', 'b'));
-        $this->assertTrue($response->hasHeader(''));
-        $this->assertSame(['foo' => 'bar'], $response->getHeaders());
-        $this->assertSame('foo', $response->getBody());
-        $this->assertSame(100, $response->withProtocolVersion(100));
-        $this->assertSame(200, $response->withoutHeader(200));
-        $this->assertSame(300, $response->getHeaderLine(300));
-        $this->assertSame(['c', 'd'], $response->withHeader('c', 'd'));
+
+        $withStatus = $response->withStatus(200, 'b');
+        $this->assertSame([200, 'b'], [$withStatus->getStatusCode(), $withStatus->getReasonPhrase()]);
+
+        $this->assertTrue($response->hasHeader('foo'));
+
+        $this->assertSame(['foo' => ['bar']], $response->getHeaders());
+        $this->assertSame('', (string) $response->getBody());
+
+        $withVersion = $response->withProtocolVersion("1.1");
+        $this->assertSame("1.1", $withVersion->getProtocolVersion());
+
+        $withoutHeader = $response->withoutHeader('foo');
+        $this->assertSame('', $withoutHeader->getHeaderLine('foo'));
+        $this->assertSame([], $withoutHeader->getHeader('foo'));
+
+        $this->assertSame(['bar'], $response->getHeader('foo'));
+
+        $withHeader = $response->withHeader('c', 'd');
+        $this->assertSame(['d'], $withHeader->getHeader('c'));
 
         $body = $this->createMock(StreamInterface::class);
-        $this->assertSame($body, $response->withBody($body));
+        $withBody = $response->withBody($body);
+        $this->assertSame($body, $withBody->getBody());
+
         $this->assertSame('Bad Gateway Testing 123', $response->getReasonPhrase());
-        $this->assertSame('bar', $response->getHeader('bar'));
-        $this->assertSame(1000, $response->getProtocolVersion());
+        $this->assertSame(['bar'], $response->getHeader('foo'));
+
+        $this->assertSame("1.1", $response->getProtocolVersion());
         $this->assertSame(502, $response->getStatusCode());
-        $this->assertSame(['e', 'f'], $response->withAddedHeader('e', 'f'));
+
+        $withHeader = $response->withAddedHeader('e', 'f');
+        $this->assertSame(['f'], $withHeader->getHeader('e'));
+
         $this->assertSame('{}', \json_encode($response));
     }
 
