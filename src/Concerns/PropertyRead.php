@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This code is licensed under the MIT License.
  *
@@ -35,7 +36,7 @@ trait PropertyRead
      */
     public function __get(string $property)
     {
-        if (\method_exists($this, 'get'.$property)) {
+        if (method_exists($this, 'get'.$property)) {
             return $this->{'get'.$property}();
         }
 

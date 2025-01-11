@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This code is licensed under the MIT License.
  *
@@ -37,7 +38,7 @@ trait PropertyIterator
      */
     public function getIterator()
     {
-        return take(\get_object_vars($this))->filter(static function ($value) {
+        return take(get_object_vars($this))->filter(static function ($value) {
             return $value !== null;
         });
     }

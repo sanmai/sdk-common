@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This code is licensed under the MIT License.
  *
@@ -70,6 +71,7 @@ trait ListContainer
 
     /**
      * @return iterable|HasErrorCode[]
+     *
      * @psalm-return iterable<HasErrorCode>
      */
     public function getMessages()
@@ -79,6 +81,7 @@ trait ListContainer
 
     /**
      * @return \ArrayIterator<object>
+     *
      * @psalm-return \ArrayIterator<array-key, object>
      */
     public function getIterator()
