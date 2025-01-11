@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This code is licensed under the MIT License.
  *
@@ -42,109 +43,69 @@ class HTTPErrorResponseTest extends TestCase
 {
     public function test_create(): void
     {
-        $body = $this->createMock(StreamInterface::class);
+        // Create a mock of the PSR-7 ResponseInterface.
+        $mockResponse = $this->createMock(ResponseInterface::class);
 
-        $response = HTTPErrorResponse::withHTTPResponse(new class($body) implements ResponseInterface {
-            private int $status_code = HttpResponse::HTTP_BAD_GATEWAY;
-            private string $status_reason = 'Bad Gateway Testing 123';
-            private string $version = '1.1';
-            private array $headers = ['foo' => ['bar']];
-            private StreamInterface $body;
+        // Set up your expectations or default return values
+        $mockResponse->method('withStatus')
+            ->willReturnCallback(function ($code, $reasonPhrase = '') {
+                return [$code, $reasonPhrase];
+            });
 
-            public function __construct(StreamInterface $body)
-            {
-                $this->body = $body;
-            }
+        $mockResponse->method('hasHeader')
+            ->willReturn(true);
 
-            public function withStatus(int $code, string $reasonPhrase = ''): ResponseInterface
-            {
-                $new = clone $this;
-                $new->status_code = $code;
-                $new->status_reason = $reasonPhrase;
+        $mockResponse->method('getHeaders')
+            ->willReturn(['foo' => 'bar']);
 
-                return $new;
-            }
+        $mockResponse->method('getBody')
+            ->willReturn('foo');
 
-            public function hasHeader(string $name): bool
-            {
-                return isset($this->headers[$name]);
-            }
+        $mockResponse->method('withProtocolVersion')
+            ->willReturnCallback(function ($version) {
+                return $version;
+            });
 
-            public function getHeaders(): array
-            {
-                return $this->headers;
-            }
+        $mockResponse->method('withoutHeader')
+            ->willReturnCallback(function ($name) {
+                return $name;
+            });
 
-            public function getBody(): StreamInterface
-            {
-                return $this->body;
-            }
+        $mockResponse->method('getHeaderLine')
+            ->willReturnCallback(function ($name) {
+                return $name;
+            });
 
-            public function withProtocolVersion(string $version): MessageInterface
-            {
-                $new = clone $this;
-                $new->version = $version;
+        $mockResponse->method('withHeader')
+            ->willReturnCallback(function ($name, $value) {
+                return [$name, $value];
+            });
 
-                return $new;
-            }
+        $mockResponse->method('withBody')
+            ->willReturnCallback(function (StreamInterface $body) {
+                return $body;
+            });
 
-            public function withoutHeader(string $name): MessageInterface
-            {
-                $new = clone $this;
-                unset($new->headers[$name]);
+        $mockResponse->method('getReasonPhrase')
+            ->willReturn('Bad Gateway Testing 123');
 
-                return $new;
-            }
+        $mockResponse->method('getHeader')
+            ->willReturnCallback(function ($name) {
+                return $name;
+            });
 
-            public function getHeaderLine(string $name): string
-            {
-                return isset($this->headers[$name]) ? \implode(', ', $this->headers[$name]) : '';
-            }
+        $mockResponse->method('getProtocolVersion')
+            ->willReturn(1000);
 
-            public function withHeader(string $name, $value): MessageInterface
-            {
-                $new = clone $this;
-                $new->headers[$name] = \is_array($value) ? $value : [$value];
+        $mockResponse->method('getStatusCode')
+            ->willReturn(200);
 
-                return $new;
-            }
+        $mockResponse->method('withAddedHeader')
+            ->willReturnCallback(function ($name, $value) {
+                return [$name, $value];
+            });
 
-            public function withBody(StreamInterface $body): MessageInterface
-            {
-                $new = clone $this;
-                $new->body = $body;
-
-                return $new;
-            }
-
-            public function getReasonPhrase(): string
-            {
-                return $this->status_reason;
-            }
-
-            public function getHeader(string $name): array
-            {
-                return $this->headers[$name] ?? [];
-            }
-
-            public function getProtocolVersion(): string
-            {
-                return $this->version;
-            }
-
-            public function getStatusCode(): int
-            {
-                return $this->status_code;
-            }
-
-            public function withAddedHeader(string $name, $value): MessageInterface
-            {
-                $new = clone $this;
-                $new->headers[$name] = \is_array($value) ? $value : [$value];
-
-                return $new;
-            }
-        });
+        $response = HTTPErrorResponse::withHTTPResponse($mockResponse);
 
         $this->assertTrue($response->hasErrors());
         $this->assertCount(1, $response->getMessages());
@@ -189,82 +150,15 @@ class HTTPErrorResponseTest extends TestCase
         $withHeader = $response->withAddedHeader('e', 'f');
         $this->assertSame(['f'], $withHeader->getHeader('e'));
 
-        $this->assertSame('{}', \json_encode($response));
+        $this->assertSame('{}', json_encode($response));
     }
 
     public function test_not_an_error(): void
     {
-        $response = HTTPErrorResponse::withHTTPResponse(new class() implements ResponseInterface {
-            public function withStatus($code, $reasonPhrase = '')
-            {
-                return [$code, $reasonPhrase];
-            }
+        $mockResponse = $this->createMock(ResponseInterface::class);
+        $mockResponse->method('getStatusCode')->willReturn(200);
 
-            public function hasHeader($name)
-            {
-                return true;
-            }
-
-            public function getHeaders()
-            {
-                return ['foo' => 'bar'];
-            }
-
-            public function getBody()
-            {
-                return 'foo';
-            }
-
-            public function withProtocolVersion($version)
-            {
-                return $version;
-            }
-
-            public function withoutHeader($name)
-            {
-                return $name;
-            }
-
-            public function getHeaderLine($name)
-            {
-                return $name;
-            }
-
-            public function withHeader($name, $value)
-            {
-                return [$name, $value];
-            }
-
-            public function withBody(StreamInterface $body)
-            {
-                return $body;
-            }
-
-            public function getReasonPhrase()
-            {
-                return 'Bad Gateway Testing 123';
-            }
-
-            public function getHeader($name)
-            {
-                return $name;
-            }
-
-            public function getProtocolVersion()
-            {
-                return 1000;
-            }
-
-            public function getStatusCode()
-            {
-                return 200;
-            }
-
-            public function withAddedHeader($name, $value)
-            {
-                return [$name, $value];
-            }
-        });
+        $response = HTTPErrorResponse::withHTTPResponse($mockResponse);
 
         $this->assertFalse($response->hasErrors());
     }

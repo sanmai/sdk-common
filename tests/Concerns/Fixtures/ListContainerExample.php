@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This code is licensed under the MIT License.
  *
@@ -31,11 +32,10 @@ namespace Tests\CommonSDK\Concerns\Fixtures;
 use CommonSDK\Concerns\ListContainer;
 use CommonSDK\Contracts\ItemList;
 use CommonSDK\Contracts\Response;
-use stdClass;
 
 final class ListContainerExample implements ItemList, Response
 {
-    private const LIST_TYPE = stdClass::class;
+    private const LIST_TYPE = \stdClass::class;
 
     use ListContainer;
 }

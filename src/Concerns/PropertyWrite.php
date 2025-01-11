@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This code is licensed under the MIT License.
  *
@@ -34,12 +35,10 @@ trait PropertyWrite
 {
     /**
      * @final
-     *
-     * @param mixed $value
      */
     public function __set(string $property, $value)
     {
-        if (\method_exists($this, 'set'.$property)) {
+        if (method_exists($this, 'set'.$property)) {
             $this->{'set'.$property}($value);
 
             return;

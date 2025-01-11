@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This code is licensed under the MIT License.
  *
@@ -100,7 +101,7 @@ abstract class Client implements ClientContract
     /** @phan-suppress PhanDeprecatedFunction */
     public function __call(string $name, array $arguments)
     {
-        if (0 === \strpos($name, 'send')) {
+        if (0 === strpos($name, 'send')) {
             /** @psalm-suppress MixedArgument */
             return $this->sendRequest(...$arguments);
         }
@@ -195,7 +196,7 @@ abstract class Client implements ClientContract
             return false;
         }
 
-        return 0 === \strpos(
+        return 0 === strpos(
             $response->getHeader(self::CONTENT_DISPOSITION)[0],
             self::CONTENT_DISPOSITION_ATTACHEMENT,
         );
@@ -212,7 +213,7 @@ abstract class Client implements ClientContract
 
     protected function isTextResponse(string $header): bool
     {
-        return 0 === \strpos($header, self::JSON_CONTENT_TYPE);
+        return 0 === strpos($header, self::JSON_CONTENT_TYPE);
     }
 
     private function extractOptions(Request $request): array

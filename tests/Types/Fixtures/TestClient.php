@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This code is licensed under the MIT License.
  *
@@ -47,7 +48,7 @@ class TestClient extends Client
 
     protected function isTextResponse(string $header): bool
     {
-        if (0 === \strpos($header, 'text/x-json')) {
+        if (0 === strpos($header, 'text/x-json')) {
             return true;
         }
 

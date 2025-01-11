@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This code is licensed under the MIT License.
  *
@@ -41,10 +42,10 @@ class HasErrorsTest extends TestCase
 {
     public function test_has_no_errors()
     {
-        $instance = new class() implements Response {
-            const ADDRESS = 'address';
-            const METHOD = 'HEAD';
-            const RESPONSE = RequestCoreTest::class;
+        $instance = new class implements Response {
+            public const ADDRESS = 'address';
+            public const METHOD = 'HEAD';
+            public const RESPONSE = RequestCoreTest::class;
 
             use RequestCore;
             use HasErrors;
@@ -60,10 +61,10 @@ class HasErrorsTest extends TestCase
 
     public function test_has_errors()
     {
-        $instance = new class() implements Response {
-            const ADDRESS = 'address';
-            const METHOD = 'HEAD';
-            const RESPONSE = RequestCoreTest::class;
+        $instance = new class implements Response {
+            public const ADDRESS = 'address';
+            public const METHOD = 'HEAD';
+            public const RESPONSE = RequestCoreTest::class;
 
             use RequestCore;
             use HasErrors;

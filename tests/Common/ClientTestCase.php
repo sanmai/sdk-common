@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This code is licensed under the MIT License.
  *
@@ -35,7 +36,9 @@ use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\ServerException;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+
 use function Pipeline\zip;
+
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
@@ -91,7 +94,7 @@ abstract class ClientTestCase extends TestCase implements Concerns\ClientTestCas
         return $http;
     }
 
-    abstract public function newClient(ClientInterface $http = null);
+    abstract public function newClient(?ClientInterface $http = null);
 
     abstract public function errorResponsesProvider(): iterable;
 

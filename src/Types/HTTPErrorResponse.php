@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This code is licensed under the MIT License.
  *
@@ -122,7 +123,6 @@ final class HTTPErrorResponse implements Response, ResponseInterface
      * @psalm-suppress LessSpecificReturnStatement
      *
      * @param mixed $name
-     * @param mixed $value
      */
     public function withHeader(string $name, $value): MessageInterface
     {
@@ -167,7 +167,6 @@ final class HTTPErrorResponse implements Response, ResponseInterface
      * @psalm-suppress LessSpecificReturnStatement
      *
      * @param mixed $name
-     * @param mixed $value
      */
     public function withAddedHeader(string $name, $value): MessageInterface
     {

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This code is licensed under the MIT License.
  *
@@ -45,6 +46,7 @@ final class ExampleWithArrayProperty
 
     /**
      * @JMS\Type("ArrayCollection<int>")
+     *
      * @JMS\SkipWhenEmpty
      *
      * @var ArrayProperty<int>

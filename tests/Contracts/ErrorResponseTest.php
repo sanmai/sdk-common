@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This code is licensed under the MIT License.
  *
@@ -39,10 +40,10 @@ class ErrorResponseTest extends TestCase
 {
     public function test_it_implements_countable()
     {
-        $this->assertTrue(\interface_exists(ErrorResponse::class));
+        $this->assertTrue(interface_exists(ErrorResponse::class));
 
-        $interfaces = \class_implements(ErrorResponse::class);
+        $interfaces = class_implements(ErrorResponse::class);
 
-        $this->assertArrayHasKey(Countable::class, $interfaces, 'Error responses must implement countable to be compatible with common list-type responses');
+        $this->assertArrayHasKey(\Countable::class, $interfaces, 'Error responses must implement countable to be compatible with common list-type responses');
     }
 }

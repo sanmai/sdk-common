@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This code is licensed under the MIT License.
  *
@@ -50,7 +51,7 @@ final class ObjectProperty
 
     public function __construct()
     {
-        $this->example = new class() implements Property {
+        $this->example = new class implements Property {
             /** @var bool */
             public $foo = true;
         };

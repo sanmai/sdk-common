@@ -53,7 +53,7 @@ use Tests\CommonSDK\Types\Fixtures\TestClient;
  */
 class ClientTest extends ClientTestCase
 {
-    public function newClient(ClientInterface $http = null): TestClient
+    public function newClient(?ClientInterface $http = null): TestClient
     {
         $http = $http ?? $this->createMock(ClientInterface::class);
 
@@ -145,7 +145,7 @@ class ClientTest extends ClientTestCase
             'message' => '{method} {location}',
             'context' => [
                 'method'       => 'PUT',
-                    'location' => '/json',
+                'location'     => '/json',
             ],
         ]));
 
@@ -161,10 +161,10 @@ class ClientTest extends ClientTestCase
         $client = $this->newClient($http = $this->getHttpClient());
 
         $http->method('request')->will($this->returnCallback(function () {
-            throw new RuntimeException();
+            throw new \RuntimeException();
         }));
 
-        $this->expectException(RuntimeException::class);
+        $this->expectException(\RuntimeException::class);
         $client->sendRequest($this->createMock(Request::class));
     }
 
@@ -233,7 +233,7 @@ class ClientTest extends ClientTestCase
         $this->expectException(\BadMethodCallException::class);
 
         $invalid = 'invalid';
-        ($this->newClient())->{$invalid}();
+        $this->newClient()->{$invalid}();
     }
 
     public function possibleRequests()
@@ -246,6 +246,7 @@ class ClientTest extends ClientTestCase
 
     /**
      * @param ExampleParamRequest|ExampleJsonRequest $request
+     *
      * @dataProvider possibleRequests
      */
     public function test_request(Request $request, string $expectedOptionsKey, ?string $contentType = null)
