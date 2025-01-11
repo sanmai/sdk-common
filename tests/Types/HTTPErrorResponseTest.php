@@ -45,14 +45,14 @@ class HTTPErrorResponseTest extends TestCase
         $body = $this->createMock(StreamInterface::class);
 
         $response = HTTPErrorResponse::withHTTPResponse(new class($body) implements ResponseInterface {
-
             private int $status_code = HttpResponse::HTTP_BAD_GATEWAY;
             private string $status_reason = 'Bad Gateway Testing 123';
             private string $version = '1.1';
             private array $headers = ['foo' => ['bar']];
             private StreamInterface $body;
 
-            public function __construct(StreamInterface $body) {
+            public function __construct(StreamInterface $body)
+            {
                 $this->body = $body;
             }
 
@@ -61,6 +61,7 @@ class HTTPErrorResponseTest extends TestCase
                 $new = clone $this;
                 $new->status_code = $code;
                 $new->status_reason = $reasonPhrase;
+
                 return $new;
             }
 
@@ -83,6 +84,7 @@ class HTTPErrorResponseTest extends TestCase
             {
                 $new = clone $this;
                 $new->version = $version;
+
                 return $new;
             }
 
@@ -90,18 +92,20 @@ class HTTPErrorResponseTest extends TestCase
             {
                 $new = clone $this;
                 unset($new->headers[$name]);
+
                 return $new;
             }
 
             public function getHeaderLine(string $name): string
             {
-                return isset($this->headers[$name]) ? implode(', ', $this->headers[$name]) : '';
+                return isset($this->headers[$name]) ? \implode(', ', $this->headers[$name]) : '';
             }
 
             public function withHeader(string $name, $value): MessageInterface
             {
                 $new = clone $this;
-                $new->headers[$name] = is_array($value) ? $value : [$value];
+                $new->headers[$name] = \is_array($value) ? $value : [$value];
+
                 return $new;
             }
 
@@ -109,6 +113,7 @@ class HTTPErrorResponseTest extends TestCase
             {
                 $new = clone $this;
                 $new->body = $body;
+
                 return $new;
             }
 
@@ -135,11 +140,11 @@ class HTTPErrorResponseTest extends TestCase
             public function withAddedHeader(string $name, $value): MessageInterface
             {
                 $new = clone $this;
-                $new->headers[$name] = is_array($value) ? $value : [$value];
+                $new->headers[$name] = \is_array($value) ? $value : [$value];
+
                 return $new;
             }
         });
-
 
         $this->assertTrue($response->hasErrors());
         $this->assertCount(1, $response->getMessages());
@@ -159,8 +164,8 @@ class HTTPErrorResponseTest extends TestCase
         $this->assertSame(['foo' => ['bar']], $response->getHeaders());
         $this->assertSame('', (string) $response->getBody());
 
-        $withVersion = $response->withProtocolVersion("1.1");
-        $this->assertSame("1.1", $withVersion->getProtocolVersion());
+        $withVersion = $response->withProtocolVersion('1.1');
+        $this->assertSame('1.1', $withVersion->getProtocolVersion());
 
         $withoutHeader = $response->withoutHeader('foo');
         $this->assertSame('', $withoutHeader->getHeaderLine('foo'));
@@ -178,7 +183,7 @@ class HTTPErrorResponseTest extends TestCase
         $this->assertSame('Bad Gateway Testing 123', $response->getReasonPhrase());
         $this->assertSame(['bar'], $response->getHeader('foo'));
 
-        $this->assertSame("1.1", $response->getProtocolVersion());
+        $this->assertSame('1.1', $response->getProtocolVersion());
         $this->assertSame(502, $response->getStatusCode());
 
         $withHeader = $response->withAddedHeader('e', 'f');

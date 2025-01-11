@@ -29,14 +29,13 @@ declare(strict_types=1);
 namespace CommonSDK\Types;
 
 use CommonSDK\Contracts\Response;
+use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
-use Psr\Http\Message\MessageInterface;
 use Symfony\Component\HttpFoundation\Response as HttpResponse;
 
 final class HTTPErrorResponse implements Response, ResponseInterface
 {
-    /** @var ResponseInterface */
     private ResponseInterface $response;
 
     private function __construct(ResponseInterface $response)
