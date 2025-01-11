@@ -31,12 +31,13 @@ namespace CommonSDK\Types;
 use CommonSDK\Contracts\Response;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
+use Psr\Http\Message\MessageInterface;
 use Symfony\Component\HttpFoundation\Response as HttpResponse;
 
 final class HTTPErrorResponse implements Response, ResponseInterface
 {
     /** @var ResponseInterface */
-    private $response;
+    private ResponseInterface $response;
 
     private function __construct(ResponseInterface $response)
     {
@@ -65,7 +66,7 @@ final class HTTPErrorResponse implements Response, ResponseInterface
      * @param mixed $code
      * @param mixed $reasonPhrase
      */
-    public function withStatus($code, $reasonPhrase = '')
+    public function withStatus(int $code, string $reasonPhrase = ''): ResponseInterface
     {
         return $this->response->withStatus($code, $reasonPhrase);
     }
@@ -75,17 +76,17 @@ final class HTTPErrorResponse implements Response, ResponseInterface
      *
      * @param mixed $name
      */
-    public function hasHeader($name)
+    public function hasHeader(string $name): bool
     {
         return $this->response->hasHeader($name);
     }
 
-    public function getHeaders()
+    public function getHeaders(): array
     {
         return $this->response->getHeaders();
     }
 
-    public function getBody()
+    public function getBody(): StreamInterface
     {
         return $this->response->getBody();
     }
@@ -96,7 +97,7 @@ final class HTTPErrorResponse implements Response, ResponseInterface
      *
      * @param mixed $version
      */
-    public function withProtocolVersion($version)
+    public function withProtocolVersion(string $version): MessageInterface
     {
         return $this->response->withProtocolVersion($version);
     }
@@ -107,7 +108,7 @@ final class HTTPErrorResponse implements Response, ResponseInterface
      *
      * @param mixed $name
      */
-    public function withoutHeader($name)
+    public function withoutHeader(string $name): MessageInterface
     {
         return $this->response->withoutHeader($name);
     }
@@ -117,7 +118,7 @@ final class HTTPErrorResponse implements Response, ResponseInterface
      *
      * @param mixed $name
      */
-    public function getHeaderLine($name)
+    public function getHeaderLine(string $name): string
     {
         return $this->response->getHeaderLine($name);
     }
@@ -129,7 +130,7 @@ final class HTTPErrorResponse implements Response, ResponseInterface
      * @param mixed $name
      * @param mixed $value
      */
-    public function withHeader($name, $value)
+    public function withHeader(string $name, $value): MessageInterface
     {
         return $this->response->withHeader($name, $value);
     }
@@ -137,12 +138,12 @@ final class HTTPErrorResponse implements Response, ResponseInterface
     /**
      * @psalm-suppress LessSpecificReturnStatement
      */
-    public function withBody(StreamInterface $body)
+    public function withBody(StreamInterface $body): MessageInterface
     {
         return $this->response->withBody($body);
     }
 
-    public function getReasonPhrase()
+    public function getReasonPhrase(): string
     {
         return $this->response->getReasonPhrase();
     }
@@ -152,17 +153,17 @@ final class HTTPErrorResponse implements Response, ResponseInterface
      *
      * @param mixed $name
      */
-    public function getHeader($name)
+    public function getHeader(string $name): array
     {
         return $this->response->getHeader($name);
     }
 
-    public function getProtocolVersion()
+    public function getProtocolVersion(): string
     {
         return $this->response->getProtocolVersion();
     }
 
-    public function getStatusCode()
+    public function getStatusCode(): int
     {
         return $this->response->getStatusCode();
     }
@@ -174,7 +175,7 @@ final class HTTPErrorResponse implements Response, ResponseInterface
      * @param mixed $name
      * @param mixed $value
      */
-    public function withAddedHeader($name, $value)
+    public function withAddedHeader(string $name, $value): MessageInterface
     {
         return $this->response->withAddedHeader($name, $value);
     }
