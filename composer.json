@@ -1,8 +1,8 @@
 {
     "name": "sanmai/sdk-common",
-    "type": "library",
     "description": "Common types and contracts for PHP API SDKs",
     "license": "MIT",
+    "type": "library",
     "authors": [
         {
             "name": "Alexey Kopytko",
@@ -12,16 +12,16 @@
         }
     ],
     "require": {
-        "php": "^7.3 || ^8.0",
+        "php": "^7.4 || ^8.0",
         "ext-json": "*",
         "doctrine/collections": "^1.6",
         "guzzlehttp/guzzle": "^6.3 || ^7.2",
-        "psr/http-message": "^1.0.1",
+        "psr/http-message": "^1.0.1 || ^2.0",
         "sanmai/json-serializer": "^0.1.1 || ^0.2.2",
         "sanmai/pipeline": "^5 || ^6"
     },
     "require-dev": {
-        "ergebnis/composer-normalize": "^2.8.2",
+        "ergebnis/composer-normalize": "^2.42",
         "friendsofphp/php-cs-fixer": "^2.16.4",
         "infection/infection": ">=0.18",
         "phan/phan": "^3.2.3 || ^4.0.0 || ^5.0.0",
@@ -31,6 +31,17 @@
         "psr/log": "^1.1",
         "symfony/http-foundation": "^4.4.7 || ^5.1.7",
         "vimeo/psalm": "^3.17.2 || ^4.1.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "CommonSDK\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "CommonSDK\\Tests\\Common\\": "tests/Common/",
+            "Tests\\CommonSDK\\": "tests/"
+        }
     },
     "config": {
         "sort-packages": true,
@@ -42,17 +53,6 @@
     "extra": {
         "branch-alias": {
             "dev-main": "0.5.x-dev"
-        }
-    },
-    "autoload": {
-        "psr-4": {
-            "CommonSDK\\": "src/"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "CommonSDK\\Tests\\Common\\": "tests/Common/",
-            "Tests\\CommonSDK\\": "tests/"
         }
     }
 }
