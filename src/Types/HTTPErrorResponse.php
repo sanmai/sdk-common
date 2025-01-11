@@ -61,9 +61,6 @@ final class HTTPErrorResponse implements Response, ResponseInterface
     /**
      * @psalm-suppress MixedArgument
      * @psalm-suppress LessSpecificReturnStatement
-     *
-     * @param mixed $code
-     * @param mixed $reasonPhrase
      */
     public function withStatus(int $code, string $reasonPhrase = ''): ResponseInterface
     {
@@ -72,8 +69,6 @@ final class HTTPErrorResponse implements Response, ResponseInterface
 
     /**
      * @psalm-suppress MixedArgument
-     *
-     * @param mixed $name
      */
     public function hasHeader(string $name): bool
     {

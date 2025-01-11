@@ -39,4 +39,11 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 final class ArrayProperty extends ArrayCollection implements ReadableRequestProperty
 {
+    /**
+     * @param array<T> $elements
+     */
+    public function __construct(array $elements = [])
+    {
+        parent::__construct($elements);
+    }
 }
