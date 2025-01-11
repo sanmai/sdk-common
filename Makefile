@@ -137,7 +137,7 @@ vendor/autoload.php:
 # If composer.lock is older than `composer.json`, do update,
 # and touch composer.lock because composer not always does that
 composer.lock: composer.json
-	$(SILENT) $(COMPOSER) update && touch composer.lock
+	$(SILENT) $(COMPOSER) update --no-interaction && touch composer.lock
 
 .phan:
 	$(PHP) $(PHAN) --init --init-level=1 --init-overwrite --target-php-version=$(PHAN_PHP_VERSION) > /dev/null

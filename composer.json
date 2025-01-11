@@ -33,7 +33,11 @@
         "vimeo/psalm": "^3.17.2 || ^4.1.1"
     },
     "config": {
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "infection/extension-installer": true,
+            "ergebnis/composer-normalize": true
+        }
     },
     "extra": {
         "branch-alias": {
