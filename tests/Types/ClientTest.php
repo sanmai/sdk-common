@@ -37,6 +37,9 @@ use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Exception\ServerException;
 use JSONSerializer\Serializer;
+
+use function Pipeline\take;
+
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LogLevel;
@@ -203,7 +206,7 @@ class ClientTest extends ClientTestCase
 
         $this->assertInstanceOf(Response::class, $response);
 
-        $this->assertCount(1, $response->getMessages());
+        $this->assertCount(1, take($response->getMessages()));
         foreach ($response->getMessages() as $message) {
             $this->assertSame('500', $message->getErrorCode());
             $this->assertSame('Server error', $message->getMessage());

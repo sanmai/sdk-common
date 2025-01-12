@@ -40,29 +40,35 @@ class ObjectPropertyReadTest extends TestCase
 {
     public function test_it_causes_notice_for_inaccessible_properties()
     {
-        $instance = new ObjectProperty();
+        $this->withErrorHandler(function () {
+            $instance = new ObjectProperty();
 
-        $this->expectError();
-        $this->expectErrorMessage('Undefined property: Tests\CommonSDK\Concerns\Fixtures\ObjectProperty::$private');
+            $this->expectExceptionMessage('Undefined property: Tests\CommonSDK\Concerns\Fixtures\ObjectProperty::$private');
+            $this->expectExceptionCode(E_USER_NOTICE);
 
-        $instance->private;
+            return $instance->private;
+        });
     }
 
     public function test_it_returns_null_for_inaccessible_properties()
     {
-        $instance = new ObjectProperty();
+        $this->withErrorHandler(function () {
+            $instance = new ObjectProperty();
 
-        $this->assertNull(@$instance->private);
+            $this->assertNull(@$instance->private);
+        });
     }
 
     public function test_it_causes_notice_for_invalid_properties()
     {
-        $instance = new ObjectProperty();
+        $this->withErrorHandler(function () {
+            $instance = new ObjectProperty();
 
-        $this->expectError();
-        $this->expectErrorMessage('Undefined property: Tests\CommonSDK\Concerns\Fixtures\ObjectProperty::$invalid');
+            $this->expectExceptionMessage('Undefined property: Tests\CommonSDK\Concerns\Fixtures\ObjectProperty::$invalid');
+            $this->expectExceptionCode(E_WARNING);
 
-        $instance->invalid;
+            return $instance->invalid;
+        });
     }
 
     public function test_it_allows_reading_property_implementing_properties()
@@ -70,5 +76,22 @@ class ObjectPropertyReadTest extends TestCase
         $instance = new ObjectProperty();
 
         $this->assertInstanceOf(Property::class, $instance->example);
+    }
+
+    private function withErrorHandler(callable $callback): void
+    {
+        set_error_handler(function ($severity, $message) {
+            if (!(error_reporting() & $severity)) {
+                return false;
+            }
+
+            throw new \RuntimeException($message, $severity);
+        });
+
+        try {
+            $callback();
+        } finally {
+            restore_error_handler();
+        }
     }
 }

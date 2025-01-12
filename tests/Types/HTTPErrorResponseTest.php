@@ -31,6 +31,9 @@ namespace Tests\CommonSDK\Types;
 
 use CommonSDK\Types\HTTPErrorResponse;
 use PHPUnit\Framework\TestCase;
+
+use function Pipeline\take;
+
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 
@@ -76,7 +79,7 @@ class HTTPErrorResponseTest extends TestCase
 
         $response = HTTPErrorResponse::withHTTPResponse($mockResponse);
 
-        $this->assertCount(1, iterator_to_array($response->getMessages()));
+        $this->assertCount(1, take($response->getMessages()));
         foreach ($response->getMessages() as $message) {
             $this->assertSame('502', $message->getErrorCode());
             $this->assertSame('Bad Gateway', $message->getMessage());

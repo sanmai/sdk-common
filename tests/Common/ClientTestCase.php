@@ -37,6 +37,7 @@ use GuzzleHttp\Exception\ServerException;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
+use function Pipeline\take;
 use function Pipeline\zip;
 
 use Psr\Http\Message\RequestInterface;
@@ -132,7 +133,7 @@ abstract class ClientTestCase extends TestCase implements Concerns\ClientTestCas
 
         $this->assertInstanceOf(Response::class, $response);
 
-        $this->assertCount(\count($errors), $response->getMessages());
+        $this->assertCount(\count($errors), take($response->getMessages()));
 
         $this->assertCount(\count($errors), zip($errors, $response->getMessages())
             ->unpack(function (array $expected, HasErrorCode $message) {
