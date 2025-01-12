@@ -89,8 +89,6 @@ final class HTTPErrorResponse implements Response, ResponseInterface
     /**
      * @psalm-suppress MixedArgument
      * @psalm-suppress LessSpecificReturnStatement
-     *
-     * @param mixed $version
      */
     public function withProtocolVersion(string $version): MessageInterface
     {
@@ -100,8 +98,6 @@ final class HTTPErrorResponse implements Response, ResponseInterface
     /**
      * @psalm-suppress MixedArgument
      * @psalm-suppress LessSpecificReturnStatement
-     *
-     * @param mixed $name
      */
     public function withoutHeader(string $name): MessageInterface
     {
@@ -110,8 +106,6 @@ final class HTTPErrorResponse implements Response, ResponseInterface
 
     /**
      * @psalm-suppress MixedArgument
-     *
-     * @param mixed $name
      */
     public function getHeaderLine(string $name): string
     {
@@ -121,8 +115,6 @@ final class HTTPErrorResponse implements Response, ResponseInterface
     /**
      * @psalm-suppress MixedArgument
      * @psalm-suppress LessSpecificReturnStatement
-     *
-     * @param mixed $name
      */
     public function withHeader(string $name, $value): MessageInterface
     {
@@ -144,8 +136,6 @@ final class HTTPErrorResponse implements Response, ResponseInterface
 
     /**
      * @psalm-suppress MixedArgument
-     *
-     * @param mixed $name
      */
     public function getHeader(string $name): array
     {
@@ -165,8 +155,6 @@ final class HTTPErrorResponse implements Response, ResponseInterface
     /**
      * @psalm-suppress MixedArgument
      * @psalm-suppress LessSpecificReturnStatement
-     *
-     * @param mixed $name
      */
     public function withAddedHeader(string $name, $value): MessageInterface
     {
