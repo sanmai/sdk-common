@@ -98,7 +98,10 @@ abstract class Client implements ClientContract
         return $response;
     }
 
-    /** @phan-suppress PhanDeprecatedFunction */
+    /**
+     * @phan-suppress PhanDeprecatedFunction
+     * @phan-suppress PhanParamTooFewUnpack
+     */
     public function __call(string $name, array $arguments)
     {
         if (0 === strpos($name, 'send')) {

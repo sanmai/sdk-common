@@ -89,6 +89,8 @@ final class HTTPErrorResponse implements Response, ResponseInterface
     /**
      * @psalm-suppress MixedArgument
      * @psalm-suppress LessSpecificReturnStatement
+     *
+     * @phan-suppress PhanParamSignatureMismatch
      */
     public function withProtocolVersion(string $version): MessageInterface
     {
@@ -98,6 +100,8 @@ final class HTTPErrorResponse implements Response, ResponseInterface
     /**
      * @psalm-suppress MixedArgument
      * @psalm-suppress LessSpecificReturnStatement
+     *
+     * @phan-suppress PhanParamSignatureMismatch
      */
     public function withoutHeader(string $name): MessageInterface
     {
@@ -115,6 +119,8 @@ final class HTTPErrorResponse implements Response, ResponseInterface
     /**
      * @psalm-suppress MixedArgument
      * @psalm-suppress LessSpecificReturnStatement
+     *
+     * @phan-suppress PhanParamSignatureMismatch
      */
     public function withHeader(string $name, $value): MessageInterface
     {
@@ -123,6 +129,8 @@ final class HTTPErrorResponse implements Response, ResponseInterface
 
     /**
      * @psalm-suppress LessSpecificReturnStatement
+     *
+     * @phan-suppress PhanParamSignatureMismatch
      */
     public function withBody(StreamInterface $body): MessageInterface
     {
@@ -155,6 +163,8 @@ final class HTTPErrorResponse implements Response, ResponseInterface
     /**
      * @psalm-suppress MixedArgument
      * @psalm-suppress LessSpecificReturnStatement
+     *
+     * @phan-suppress PhanParamSignatureMismatch
      */
     public function withAddedHeader(string $name, $value): MessageInterface
     {
