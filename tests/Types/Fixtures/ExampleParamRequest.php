@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This code is licensed under the MIT License.
  *
@@ -42,6 +43,7 @@ final class ExampleParamRequest implements ParamRequest
     private const RESPONSE = ExampleResponse::class;
 
     use RequestCore;
+    use ParamRequestTrait;
 
     private $requestMethod;
 

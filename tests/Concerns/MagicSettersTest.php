@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This code is licensed under the MIT License.
  *
@@ -38,7 +39,7 @@ class MagicSettersTest extends TestCase
 {
     public function test_can_set_params()
     {
-        $example = new class() {
+        $example = new class {
             use MagicSetters;
 
             public $foo;
@@ -54,12 +55,12 @@ class MagicSettersTest extends TestCase
             'foo'         => 'foo',
             'bar'         => 'bar',
             'justTesting' => 123,
-        ], \get_object_vars($example));
+        ], get_object_vars($example));
     }
 
     public function test_missing_setter()
     {
-        $example = new class() {
+        $example = new class {
             use MagicSetters;
 
             private $foo;

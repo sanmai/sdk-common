@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This code is licensed under the MIT License.
  *
@@ -32,6 +33,7 @@ trait RequestCore
 {
     /**
      * @phan-suppress PhanUndeclaredConstantOfClass
+     *
      * @psalm-suppress MixedInferredReturnType
      */
     public function getAddress(): string
@@ -41,6 +43,7 @@ trait RequestCore
 
     /**
      * @phan-suppress PhanUndeclaredConstantOfClass
+     *
      * @psalm-suppress MixedInferredReturnType
      */
     public function getMethod(): string
@@ -50,6 +53,7 @@ trait RequestCore
 
     /**
      * @phan-suppress PhanUndeclaredConstantOfClass
+     *
      * @psalm-suppress MixedInferredReturnType
      */
     public function getResponseClassName(): string
@@ -59,6 +63,7 @@ trait RequestCore
 
     /**
      * @phan-suppress PhanUndeclaredConstantOfClass
+     *
      * @psalm-suppress MixedInferredReturnType
      */
     public function getSerializationFormat(): string

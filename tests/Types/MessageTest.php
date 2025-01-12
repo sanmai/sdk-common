@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This code is licensed under the MIT License.
  *
@@ -60,9 +61,9 @@ class MessageTest extends TestCase
     public function test_from_returns_valid_messages()
     {
         foreach (Message::from([
-           new Message('example1', 'FOO1'),
-           new Message('', null),
-       ]) as $message) {
+            new Message('example1', 'FOO1'),
+            new Message('', null),
+        ]) as $message) {
             $this->assertSame('example1', $message->getMessage());
             $this->assertSame('FOO1', $message->getErrorCode());
         }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This code is licensed under the MIT License.
  *
@@ -29,14 +30,16 @@ declare(strict_types=1);
 namespace CommonSDK\Types;
 
 use CommonSDK\Contracts\Response;
+use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
-use Psr\Http\Message\MessageInterface;
 use Symfony\Component\HttpFoundation\Response as HttpResponse;
 
+/**
+ * @psalm-suppress MoreSpecificReturnType
+ */
 final class HTTPErrorResponse implements Response, ResponseInterface
 {
-    /** @var ResponseInterface */
     private ResponseInterface $response;
 
     private function __construct(ResponseInterface $response)
@@ -62,9 +65,6 @@ final class HTTPErrorResponse implements Response, ResponseInterface
     /**
      * @psalm-suppress MixedArgument
      * @psalm-suppress LessSpecificReturnStatement
-     *
-     * @param mixed $code
-     * @param mixed $reasonPhrase
      */
     public function withStatus(int $code, string $reasonPhrase = ''): ResponseInterface
     {
@@ -73,8 +73,6 @@ final class HTTPErrorResponse implements Response, ResponseInterface
 
     /**
      * @psalm-suppress MixedArgument
-     *
-     * @param mixed $name
      */
     public function hasHeader(string $name): bool
     {
@@ -95,7 +93,7 @@ final class HTTPErrorResponse implements Response, ResponseInterface
      * @psalm-suppress MixedArgument
      * @psalm-suppress LessSpecificReturnStatement
      *
-     * @param mixed $version
+     * @phan-suppress PhanParamSignatureMismatch
      */
     public function withProtocolVersion(string $version): MessageInterface
     {
@@ -106,7 +104,7 @@ final class HTTPErrorResponse implements Response, ResponseInterface
      * @psalm-suppress MixedArgument
      * @psalm-suppress LessSpecificReturnStatement
      *
-     * @param mixed $name
+     * @phan-suppress PhanParamSignatureMismatch
      */
     public function withoutHeader(string $name): MessageInterface
     {
@@ -115,8 +113,6 @@ final class HTTPErrorResponse implements Response, ResponseInterface
 
     /**
      * @psalm-suppress MixedArgument
-     *
-     * @param mixed $name
      */
     public function getHeaderLine(string $name): string
     {
@@ -127,8 +123,7 @@ final class HTTPErrorResponse implements Response, ResponseInterface
      * @psalm-suppress MixedArgument
      * @psalm-suppress LessSpecificReturnStatement
      *
-     * @param mixed $name
-     * @param mixed $value
+     * @phan-suppress PhanParamSignatureMismatch
      */
     public function withHeader(string $name, $value): MessageInterface
     {
@@ -137,6 +132,8 @@ final class HTTPErrorResponse implements Response, ResponseInterface
 
     /**
      * @psalm-suppress LessSpecificReturnStatement
+     *
+     * @phan-suppress PhanParamSignatureMismatch
      */
     public function withBody(StreamInterface $body): MessageInterface
     {
@@ -150,8 +147,6 @@ final class HTTPErrorResponse implements Response, ResponseInterface
 
     /**
      * @psalm-suppress MixedArgument
-     *
-     * @param mixed $name
      */
     public function getHeader(string $name): array
     {
@@ -172,8 +167,7 @@ final class HTTPErrorResponse implements Response, ResponseInterface
      * @psalm-suppress MixedArgument
      * @psalm-suppress LessSpecificReturnStatement
      *
-     * @param mixed $name
-     * @param mixed $value
+     * @phan-suppress PhanParamSignatureMismatch
      */
     public function withAddedHeader(string $name, $value): MessageInterface
     {

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This code is licensed under the MIT License.
  *
@@ -29,6 +30,7 @@ declare(strict_types=1);
 namespace CommonSDK\Types;
 
 use CommonSDK\Contracts\HasErrorCode;
+
 use function Pipeline\take;
 
 final class Message implements HasErrorCode

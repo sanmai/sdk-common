@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This code is licensed under the MIT License.
  *
@@ -30,7 +31,7 @@ namespace CommonSDK\Contracts;
 
 interface Request
 {
-    const SERIALIZATION_JSON = 'json';
+    public const SERIALIZATION_JSON = 'json';
 
     public function getMethod(): string;
 

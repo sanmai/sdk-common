@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This code is licensed under the MIT License.
  *
@@ -35,7 +36,7 @@ trait ParamRequest
      */
     public function getParams(): array
     {
-        return \array_filter(\get_object_vars($this), function ($value) {
+        return array_filter(get_object_vars($this), function ($value) {
             return $value !== null;
         });
     }

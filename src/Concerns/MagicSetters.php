@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This code is licensed under the MIT License.
  *
@@ -38,7 +39,7 @@ trait MagicSetters
      */
     public function __call(string $name, array $arguments)
     {
-        if (0 === \strpos($name, 'set') && \property_exists($this, $property = \lcfirst(\substr($name, 3)))) {
+        if (0 === strpos($name, 'set') && property_exists($this, $property = lcfirst(substr($name, 3)))) {
             $this->{$property} = $arguments[0];
 
             return $this;

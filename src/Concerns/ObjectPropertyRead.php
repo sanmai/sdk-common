@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This code is licensed under the MIT License.
  *
@@ -44,7 +45,7 @@ trait ObjectPropertyRead
             return $this->{$property};
         }
 
-        \trigger_error(\sprintf('Undefined property: %s::$%s', \get_called_class(), $property), E_USER_NOTICE);
+        trigger_error(\sprintf('Undefined property: %s::$%s', \get_called_class(), $property), E_USER_NOTICE);
 
         return null;
     }

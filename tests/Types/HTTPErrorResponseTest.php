@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This code is licensed under the MIT License.
  *
@@ -30,237 +31,239 @@ namespace Tests\CommonSDK\Types;
 
 use CommonSDK\Types\HTTPErrorResponse;
 use PHPUnit\Framework\TestCase;
-use Psr\Http\Message\MessageInterface;
+
+use function Pipeline\take;
+
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
-use Symfony\Component\HttpFoundation\Response as HttpResponse;
 
 /**
  * @covers \CommonSDK\Types\HTTPErrorResponse
  */
 class HTTPErrorResponseTest extends TestCase
 {
-    public function test_create(): void
+    public function test_has_errors()
     {
-        $body = $this->createMock(StreamInterface::class);
+        $mockResponse = $this->createMock(ResponseInterface::class);
 
-        $response = HTTPErrorResponse::withHTTPResponse(new class($body) implements ResponseInterface {
+        $mockResponse->expects($this->once())
+            ->method('getStatusCode')
+            ->willReturn(502);
 
-            private int $status_code = HttpResponse::HTTP_BAD_GATEWAY;
-            private string $status_reason = 'Bad Gateway Testing 123';
-            private string $version = '1.1';
-            private array $headers = ['foo' => ['bar']];
-            private StreamInterface $body;
-
-            public function __construct(StreamInterface $body) {
-                $this->body = $body;
-            }
-
-            public function withStatus(int $code, string $reasonPhrase = ''): ResponseInterface
-            {
-                $new = clone $this;
-                $new->status_code = $code;
-                $new->status_reason = $reasonPhrase;
-                return $new;
-            }
-
-            public function hasHeader(string $name): bool
-            {
-                return isset($this->headers[$name]);
-            }
-
-            public function getHeaders(): array
-            {
-                return $this->headers;
-            }
-
-            public function getBody(): StreamInterface
-            {
-                return $this->body;
-            }
-
-            public function withProtocolVersion(string $version): MessageInterface
-            {
-                $new = clone $this;
-                $new->version = $version;
-                return $new;
-            }
-
-            public function withoutHeader(string $name): MessageInterface
-            {
-                $new = clone $this;
-                unset($new->headers[$name]);
-                return $new;
-            }
-
-            public function getHeaderLine(string $name): string
-            {
-                return isset($this->headers[$name]) ? implode(', ', $this->headers[$name]) : '';
-            }
-
-            public function withHeader(string $name, $value): MessageInterface
-            {
-                $new = clone $this;
-                $new->headers[$name] = is_array($value) ? $value : [$value];
-                return $new;
-            }
-
-            public function withBody(StreamInterface $body): MessageInterface
-            {
-                $new = clone $this;
-                $new->body = $body;
-                return $new;
-            }
-
-            public function getReasonPhrase(): string
-            {
-                return $this->status_reason;
-            }
-
-            public function getHeader(string $name): array
-            {
-                return $this->headers[$name] ?? [];
-            }
-
-            public function getProtocolVersion(): string
-            {
-                return $this->version;
-            }
-
-            public function getStatusCode(): int
-            {
-                return $this->status_code;
-            }
-
-            public function withAddedHeader(string $name, $value): MessageInterface
-            {
-                $new = clone $this;
-                $new->headers[$name] = is_array($value) ? $value : [$value];
-                return $new;
-            }
-        });
-
+        $response = HTTPErrorResponse::withHTTPResponse($mockResponse);
 
         $this->assertTrue($response->hasErrors());
-        $this->assertCount(1, $response->getMessages());
-        foreach ($response->getMessages() as $message) {
-            $this->assertSame('502', $message->getErrorCode());
-            $this->assertSame('Bad Gateway Testing 123', $message->getMessage());
-        }
-
-        $this->assertSame(502, $response->getStatusCode());
-        $this->assertSame('Bad Gateway Testing 123', $response->getReasonPhrase());
-
-        $withStatus = $response->withStatus(200, 'b');
-        $this->assertSame([200, 'b'], [$withStatus->getStatusCode(), $withStatus->getReasonPhrase()]);
-
-        $this->assertTrue($response->hasHeader('foo'));
-
-        $this->assertSame(['foo' => ['bar']], $response->getHeaders());
-        $this->assertSame('', (string) $response->getBody());
-
-        $withVersion = $response->withProtocolVersion("1.1");
-        $this->assertSame("1.1", $withVersion->getProtocolVersion());
-
-        $withoutHeader = $response->withoutHeader('foo');
-        $this->assertSame('', $withoutHeader->getHeaderLine('foo'));
-        $this->assertSame([], $withoutHeader->getHeader('foo'));
-
-        $this->assertSame(['bar'], $response->getHeader('foo'));
-
-        $withHeader = $response->withHeader('c', 'd');
-        $this->assertSame(['d'], $withHeader->getHeader('c'));
-
-        $body = $this->createMock(StreamInterface::class);
-        $withBody = $response->withBody($body);
-        $this->assertSame($body, $withBody->getBody());
-
-        $this->assertSame('Bad Gateway Testing 123', $response->getReasonPhrase());
-        $this->assertSame(['bar'], $response->getHeader('foo'));
-
-        $this->assertSame("1.1", $response->getProtocolVersion());
-        $this->assertSame(502, $response->getStatusCode());
-
-        $withHeader = $response->withAddedHeader('e', 'f');
-        $this->assertSame(['f'], $withHeader->getHeader('e'));
-
-        $this->assertSame('{}', \json_encode($response));
     }
 
     public function test_not_an_error(): void
     {
-        $response = HTTPErrorResponse::withHTTPResponse(new class() implements ResponseInterface {
-            public function withStatus($code, $reasonPhrase = '')
-            {
-                return [$code, $reasonPhrase];
-            }
+        $mockResponse = $this->createMock(ResponseInterface::class);
+        $mockResponse->expects($this->once())->method('getStatusCode')->willReturn(200);
 
-            public function hasHeader($name)
-            {
-                return true;
-            }
-
-            public function getHeaders()
-            {
-                return ['foo' => 'bar'];
-            }
-
-            public function getBody()
-            {
-                return 'foo';
-            }
-
-            public function withProtocolVersion($version)
-            {
-                return $version;
-            }
-
-            public function withoutHeader($name)
-            {
-                return $name;
-            }
-
-            public function getHeaderLine($name)
-            {
-                return $name;
-            }
-
-            public function withHeader($name, $value)
-            {
-                return [$name, $value];
-            }
-
-            public function withBody(StreamInterface $body)
-            {
-                return $body;
-            }
-
-            public function getReasonPhrase()
-            {
-                return 'Bad Gateway Testing 123';
-            }
-
-            public function getHeader($name)
-            {
-                return $name;
-            }
-
-            public function getProtocolVersion()
-            {
-                return 1000;
-            }
-
-            public function getStatusCode()
-            {
-                return 200;
-            }
-
-            public function withAddedHeader($name, $value)
-            {
-                return [$name, $value];
-            }
-        });
+        $response = HTTPErrorResponse::withHTTPResponse($mockResponse);
 
         $this->assertFalse($response->hasErrors());
+    }
+
+    public function test_messages()
+    {
+        $mockResponse = $this->createMock(ResponseInterface::class);
+
+        $mockResponse->expects($this->atLeastOnce())
+            ->method('getReasonPhrase')
+            ->willReturn('Bad Gateway');
+
+        $mockResponse->expects($this->atLeastOnce())
+            ->method('getStatusCode')
+            ->willReturn(502);
+
+        $response = HTTPErrorResponse::withHTTPResponse($mockResponse);
+
+        $this->assertCount(1, take($response->getMessages()));
+        foreach ($response->getMessages() as $message) {
+            $this->assertSame('502', $message->getErrorCode());
+            $this->assertSame('Bad Gateway', $message->getMessage());
+        }
+    }
+
+    public function test_with_status()
+    {
+        $mockResponse = $this->createMock(ResponseInterface::class);
+
+        $mockResponse->expects($this->once())->method('withStatus')
+            ->with(500, 'Boo')
+            ->willReturnSelf();
+
+        $response = HTTPErrorResponse::withHTTPResponse($mockResponse);
+
+        $this->assertSame($mockResponse, $response->withStatus(500, 'Boo'));
+    }
+
+    public function test_has_header()
+    {
+        $mockResponse = $this->createMock(ResponseInterface::class);
+
+        $mockResponse->expects($this->once())
+            ->method('hasHeader')
+            ->with('foo')
+            ->willReturn(true);
+
+        $response = HTTPErrorResponse::withHTTPResponse($mockResponse);
+
+        $this->assertTrue($response->hasHeader('foo'));
+    }
+
+    public function test_get_headers()
+    {
+        $mockResponse = $this->createMock(ResponseInterface::class);
+
+        $mockResponse->expects($this->once())
+            ->method('getHeaders')
+            ->willReturn(['foo' => ['bar']]);
+
+        $response = HTTPErrorResponse::withHTTPResponse($mockResponse);
+
+        $this->assertSame(['foo' => ['bar']], $response->getHeaders());
+    }
+
+    public function test_get_body()
+    {
+        $mockResponse = $this->createMock(ResponseInterface::class);
+
+        $mockStream = $this->createMock(StreamInterface::class);
+
+        $mockResponse->expects($this->once())
+            ->method('getBody')
+            ->willReturn($mockStream);
+
+        $response = HTTPErrorResponse::withHTTPResponse($mockResponse);
+
+        $this->assertSame($mockStream, $response->getBody());
+    }
+
+    public function test_with_protocol_version()
+    {
+        $mockResponse = $this->createMock(ResponseInterface::class);
+
+        $mockResponse->expects($this->once())
+            ->method('withProtocolVersion')
+            ->with('1.1')
+            ->willReturnSelf();
+
+        $response = HTTPErrorResponse::withHTTPResponse($mockResponse);
+
+        $this->assertSame($mockResponse, $response->withProtocolVersion('1.1'));
+    }
+
+    public function test_without_header()
+    {
+        $mockResponse = $this->createMock(ResponseInterface::class);
+
+        $mockResponse->expects($this->once())
+            ->method('withoutHeader')
+            ->with('foo')
+            ->willReturnSelf();
+
+        $response = HTTPErrorResponse::withHTTPResponse($mockResponse);
+
+        $this->assertSame($mockResponse, $response->withoutHeader('foo'));
+    }
+
+    public function test_get_header_line()
+    {
+        $mockResponse = $this->createMock(ResponseInterface::class);
+
+        $mockResponse->expects($this->once())
+            ->method('getHeaderLine')
+            ->with('foo')
+            ->willReturn('bar');
+
+        $response = HTTPErrorResponse::withHTTPResponse($mockResponse);
+
+        $this->assertSame('bar', $response->getHeaderLine('foo'));
+    }
+
+    public function test_with_header()
+    {
+        $mockResponse = $this->createMock(ResponseInterface::class);
+
+        $mockResponse->expects($this->once())
+            ->method('withHeader')
+            ->with('foo', 'bar')
+            ->willReturnSelf();
+
+        $response = HTTPErrorResponse::withHTTPResponse($mockResponse);
+
+        $this->assertSame($mockResponse, $response->withHeader('foo', 'bar'));
+    }
+
+    public function test_get_header()
+    {
+        $mockResponse = $this->createMock(ResponseInterface::class);
+
+        $mockResponse->expects($this->once())
+            ->method('getHeader')
+            ->with('foo')
+            ->willReturn(['bar']);
+
+        $response = HTTPErrorResponse::withHTTPResponse($mockResponse);
+
+        $this->assertSame(['bar'], $response->getHeader('foo'));
+    }
+
+    public function test_with_body()
+    {
+        $mockResponse = $this->createMock(ResponseInterface::class);
+
+        $mockStream = $this->createMock(StreamInterface::class);
+
+        $mockResponse->expects($this->once())
+            ->method('withBody')
+            ->with($mockStream)
+            ->willReturnSelf();
+
+        $response = HTTPErrorResponse::withHTTPResponse($mockResponse);
+
+        $this->assertSame($mockResponse, $response->withBody($mockStream));
+    }
+
+    public function test_get_reason_phrase()
+    {
+        $mockResponse = $this->createMock(ResponseInterface::class);
+
+        $mockResponse->expects($this->once())
+            ->method('getReasonPhrase')
+            ->willReturn('Bad Gateway');
+
+        $response = HTTPErrorResponse::withHTTPResponse($mockResponse);
+
+        $this->assertSame('Bad Gateway', $response->getReasonPhrase());
+    }
+
+    public function test_get_protocol_version()
+    {
+        $mockResponse = $this->createMock(ResponseInterface::class);
+
+        $mockResponse->expects($this->once())
+            ->method('getProtocolVersion')
+            ->willReturn('1.1');
+
+        $response = HTTPErrorResponse::withHTTPResponse($mockResponse);
+
+        $this->assertSame('1.1', $response->getProtocolVersion());
+    }
+
+    public function test_with_added_header()
+    {
+        $mockResponse = $this->createMock(ResponseInterface::class);
+
+        $mockResponse->expects($this->once())
+            ->method('withAddedHeader')
+            ->with('foo', 'bar')
+            ->willReturnSelf();
+
+        $response = HTTPErrorResponse::withHTTPResponse($mockResponse);
+
+        $this->assertSame($mockResponse, $response->withAddedHeader('foo', 'bar'));
     }
 }

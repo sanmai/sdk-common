@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This code is licensed under the MIT License.
  *
@@ -29,8 +30,6 @@ declare(strict_types=1);
 namespace Tests\CommonSDK\Concerns\Fixtures;
 
 use CommonSDK\Concerns\ObjectPropertyRead;
-use CommonSDK\Concerns\PropertyRead;
-use CommonSDK\Concerns\PropertyWrite;
 use CommonSDK\Contracts\Property;
 
 /**
@@ -50,7 +49,7 @@ final class ObjectProperty
 
     public function __construct()
     {
-        $this->example = new class() implements Property {
+        $this->example = new class implements Property {
             /** @var bool */
             public $foo = true;
         };

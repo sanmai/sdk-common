@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This code is licensed under the MIT License.
  *
@@ -28,15 +29,8 @@ declare(strict_types=1);
 
 namespace Tests\CommonSDK\Concerns\Fixtures;
 
-use CommonSDK\Concerns\MagicSetters;
-use CommonSDK\Concerns\ObjectPropertyRead;
 use CommonSDK\Concerns\PropertyWrite;
-use CommonSDK\Concerns\RequestCore;
-use CommonSDK\Contracts\JsonRequest;
 use CommonSDK\Types\ArrayProperty;
-use Doctrine\Common\Collections\ArrayCollection;
-use JMS\Serializer\Annotation as JMS;
-use JsonSerializable;
 
 /**
  * @property-write int[] $array

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This code is licensed under the MIT License.
  *
@@ -29,7 +30,6 @@ declare(strict_types=1);
 namespace Tests\CommonSDK\Concerns;
 
 use PHPUnit\Framework\TestCase;
-use stdClass;
 use Tests\CommonSDK\Concerns\Fixtures\ListContainerExample;
 
 /**
@@ -39,7 +39,7 @@ class ListContainerTest extends TestCase
 {
     public function test_list_container_type()
     {
-        $this->assertSame(stdClass::class, ListContainerExample::getListType());
+        $this->assertSame(\stdClass::class, ListContainerExample::getListType());
     }
 
     public function test_list_container_instance()
@@ -56,11 +56,11 @@ class ListContainerTest extends TestCase
         $this->assertInstanceOf(\Traversable::class, $list->getIterator());
 
         foreach ($list as $item) {
-            $this->assertInstanceOf(stdClass::class, $item);
+            $this->assertInstanceOf(\stdClass::class, $item);
         }
 
         foreach ($list->getIterator() as $item) {
-            $this->assertInstanceOf(stdClass::class, $item);
+            $this->assertInstanceOf(\stdClass::class, $item);
         }
     }
 }

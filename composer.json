@@ -12,24 +12,24 @@
         }
     ],
     "require": {
-        "php": "^7.4 || ^8.0",
+        "php": "^8.1",
         "ext-json": "*",
         "doctrine/collections": "^1.6",
         "guzzlehttp/guzzle": "^6.3 || ^7.2",
-        "psr/http-message": "^1.0.1 || ^2.0",
+        "psr/http-message": "^2.0",
         "sanmai/json-serializer": "^0.1.1 || ^0.2.2",
         "sanmai/pipeline": "^5 || ^6"
     },
     "require-dev": {
-        "ergebnis/composer-normalize": "^2.42",
-        "friendsofphp/php-cs-fixer": "^2.16.4",
+        "ergebnis/composer-normalize": "^2.45",
+        "friendsofphp/php-cs-fixer": "^3.67",
         "infection/infection": ">=0.18",
         "phan/phan": "^3.2.3 || ^4.0.0 || ^5.0.0",
-        "php-coveralls/php-coveralls": "^2.4.1",
+        "php-coveralls/php-coveralls": "^2.7.0",
         "phpstan/phpstan": "^0.12 || ^1.0",
         "phpunit/phpunit": "^9.4.1",
-        "psr/log": "^1.1",
-        "symfony/http-foundation": "^4.4.7 || ^5.1.7",
+        "psr/log": "^1.1.4",
+        "symfony/http-foundation": "^4.4.7 || ^5.4.8",
         "vimeo/psalm": "^3.17.2 || ^4.1.1"
     },
     "autoload": {
@@ -44,7 +44,10 @@
         }
     },
     "config": {
-        "allow-plugins": true,
+        "allow-plugins": {
+            "ergebnis/composer-normalize": true,
+            "infection/extension-installer": true
+        },
         "sort-packages": true
     },
     "extra": {

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This code is licensed under the MIT License.
  *
@@ -47,7 +48,7 @@ interface ClientTestCase
      */
     public function getHttpClient(string $contentType = 'application/json', ?string $responseBody = null, array $extraHeaders = []);
 
-    public function newClient(ClientInterface $http = null);
+    public function newClient(?ClientInterface $http = null);
 
     public function errorResponsesProvider(): iterable;
 

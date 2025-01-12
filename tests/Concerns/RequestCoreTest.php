@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This code is licensed under the MIT License.
  *
@@ -40,10 +41,10 @@ class RequestCoreTest extends TestCase
 {
     public function test_getters()
     {
-        $instance = new class() {
-            const ADDRESS = 'address';
-            const METHOD = 'HEAD';
-            const RESPONSE = RequestCoreTest::class;
+        $instance = new class {
+            public const ADDRESS = 'address';
+            public const METHOD = 'HEAD';
+            public const RESPONSE = RequestCoreTest::class;
 
             use RequestCore;
         };
@@ -55,10 +56,10 @@ class RequestCoreTest extends TestCase
 
     public function test_serialization_json()
     {
-        $instance = new class() implements JsonRequest {
-            const ADDRESS = 'address';
-            const METHOD = 'HEAD';
-            const RESPONSE = RequestCoreTest::class;
+        $instance = new class implements JsonRequest {
+            public const ADDRESS = 'address';
+            public const METHOD = 'HEAD';
+            public const RESPONSE = RequestCoreTest::class;
 
             use RequestCore;
         };

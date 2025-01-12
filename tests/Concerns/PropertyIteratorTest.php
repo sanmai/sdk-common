@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This code is licensed under the MIT License.
  *
@@ -29,7 +30,6 @@ declare(strict_types=1);
 namespace Tests\CommonSDK\Concerns;
 
 use CommonSDK\Concerns\PropertyIterator;
-use IteratorAggregate;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -39,8 +39,8 @@ class PropertyIteratorTest extends TestCase
 {
     public function test_get_params()
     {
-        $instance = new class() implements IteratorAggregate {
-            private $foo = null;
+        $instance = new class implements \IteratorAggregate {
+            private $foo;
             private $bar = 'a';
             private $baz = 2;
 
@@ -50,6 +50,6 @@ class PropertyIteratorTest extends TestCase
         $this->assertSame([
             'bar' => 'a',
             'baz' => 2,
-        ], \iterator_to_array($instance, true));
+        ], iterator_to_array($instance, true));
     }
 }

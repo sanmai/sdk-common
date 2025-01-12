@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This code is licensed under the MIT License.
  *
@@ -35,9 +36,9 @@ trait PropertyIterator
     /**
      * @final
      */
-    public function getIterator()
+    public function getIterator(): \Traversable
     {
-        return take(\get_object_vars($this))->filter(static function ($value) {
+        return take(get_object_vars($this))->filter(static function ($value) {
             return $value !== null;
         });
     }

@@ -37,11 +37,13 @@ use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Exception\ServerException;
 use JSONSerializer\Serializer;
+
+use function Pipeline\take;
+
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LogLevel;
 use Psr\Log\Test\TestLogger;
-use RuntimeException;
 use Tests\CommonSDK\Types\Fixtures\ExampleJsonParamRequest;
 use Tests\CommonSDK\Types\Fixtures\ExampleJsonRequest;
 use Tests\CommonSDK\Types\Fixtures\ExampleParamRequest;
@@ -53,7 +55,7 @@ use Tests\CommonSDK\Types\Fixtures\TestClient;
  */
 class ClientTest extends ClientTestCase
 {
-    public function newClient(ClientInterface $http = null): TestClient
+    public function newClient(?ClientInterface $http = null): TestClient
     {
         $http = $http ?? $this->createMock(ClientInterface::class);
 
@@ -145,7 +147,7 @@ class ClientTest extends ClientTestCase
             'message' => '{method} {location}',
             'context' => [
                 'method'       => 'PUT',
-                    'location' => '/json',
+                'location'     => '/json',
             ],
         ]));
 
@@ -161,10 +163,10 @@ class ClientTest extends ClientTestCase
         $client = $this->newClient($http = $this->getHttpClient());
 
         $http->method('request')->will($this->returnCallback(function () {
-            throw new RuntimeException();
+            throw new \RuntimeException();
         }));
 
-        $this->expectException(RuntimeException::class);
+        $this->expectException(\RuntimeException::class);
         $client->sendRequest($this->createMock(Request::class));
     }
 
@@ -204,7 +206,7 @@ class ClientTest extends ClientTestCase
 
         $this->assertInstanceOf(Response::class, $response);
 
-        $this->assertCount(1, $response->getMessages());
+        $this->assertCount(1, take($response->getMessages()));
         foreach ($response->getMessages() as $message) {
             $this->assertSame('500', $message->getErrorCode());
             $this->assertSame('Server error', $message->getMessage());
@@ -233,7 +235,7 @@ class ClientTest extends ClientTestCase
         $this->expectException(\BadMethodCallException::class);
 
         $invalid = 'invalid';
-        ($this->newClient())->{$invalid}();
+        $this->newClient()->{$invalid}();
     }
 
     public function possibleRequests()
@@ -246,6 +248,7 @@ class ClientTest extends ClientTestCase
 
     /**
      * @param ExampleParamRequest|ExampleJsonRequest $request
+     *
      * @dataProvider possibleRequests
      */
     public function test_request(Request $request, string $expectedOptionsKey, ?string $contentType = null)

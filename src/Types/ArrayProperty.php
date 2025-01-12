@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This code is licensed under the MIT License.
  *
@@ -35,8 +36,16 @@ use Doctrine\Common\Collections\ArrayCollection;
  * Array-like request property.
  *
  * @template T
+ *
  * @template-impelements array<T>
  */
 final class ArrayProperty extends ArrayCollection implements ReadableRequestProperty
 {
+    /**
+     * @param array<T> $elements
+     */
+    public function __construct(array $elements = [])
+    {
+        parent::__construct($elements);
+    }
 }

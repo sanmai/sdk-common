@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This code is licensed under the MIT License.
  *
@@ -38,8 +39,8 @@ class ParamRequestTest extends TestCase
 {
     public function test_get_params()
     {
-        $instance = new class() {
-            public $foo = null;
+        $instance = new class {
+            public $foo;
             public $bar = 'a';
             public $baz = 2;
 

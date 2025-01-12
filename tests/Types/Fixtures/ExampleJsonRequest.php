@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This code is licensed under the MIT License.
  *
@@ -31,7 +32,6 @@ namespace Tests\CommonSDK\Types\Fixtures;
 use CommonSDK\Concerns\MagicSetters;
 use CommonSDK\Concerns\RequestCore;
 use CommonSDK\Contracts\JsonRequest;
-use JMS\Serializer\Annotation as JMS;
 
 final class ExampleJsonRequest implements JsonRequest
 {
