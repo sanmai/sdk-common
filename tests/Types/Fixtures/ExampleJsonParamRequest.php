@@ -29,11 +29,9 @@ declare(strict_types=1);
 
 namespace Tests\CommonSDK\Types\Fixtures;
 
-use CommonSDK\Concerns\MagicSetters;
 use CommonSDK\Concerns\RequestCore;
 use CommonSDK\Contracts\JsonRequest;
 use CommonSDK\Contracts\ParamRequest;
-use JMS\Serializer\Annotation as JMS;
 
 final class ExampleJsonParamRequest implements JsonRequest, ParamRequest
 {

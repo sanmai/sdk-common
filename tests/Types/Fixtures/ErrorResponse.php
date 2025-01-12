@@ -29,7 +29,6 @@ declare(strict_types=1);
 
 namespace Tests\CommonSDK\Types\Fixtures;
 
-use CommonSDK\Contracts\HasErrorCode;
 use CommonSDK\Contracts\Response;
 use CommonSDK\Types\Message;
 use JMS\Serializer\Annotation as JMS;
@@ -39,19 +38,11 @@ use JMS\Serializer\Annotation as JMS;
  */
 final class ErrorResponse implements Response
 {
-    /**
-     * @JMS\Type("string")
-     *
-     * @var string
-     */
-    private $code;
+    #[JMS\Type('string')]
+    private ?string $code;
 
-    /**
-     * @JMS\Type("string")
-     *
-     * @var string
-     */
-    private $message = '';
+    #[JMS\Type('string')]
+    private string $message = '';
 
     public function hasErrors(): bool
     {

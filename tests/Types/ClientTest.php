@@ -41,7 +41,6 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LogLevel;
 use Psr\Log\Test\TestLogger;
-use RuntimeException;
 use Tests\CommonSDK\Types\Fixtures\ExampleJsonParamRequest;
 use Tests\CommonSDK\Types\Fixtures\ExampleJsonRequest;
 use Tests\CommonSDK\Types\Fixtures\ExampleParamRequest;

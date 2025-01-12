@@ -43,6 +43,7 @@ final class ExampleParamRequest implements ParamRequest
     private const RESPONSE = ExampleResponse::class;
 
     use RequestCore;
+    use ParamRequestTrait;
 
     private $requestMethod;
 

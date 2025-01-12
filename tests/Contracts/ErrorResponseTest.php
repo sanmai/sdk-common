@@ -30,7 +30,6 @@ declare(strict_types=1);
 namespace Tests\CommonSDK\Contracts;
 
 use CommonSDK\Contracts\ErrorResponse;
-use Countable;
 use PHPUnit\Framework\TestCase;
 
 /**

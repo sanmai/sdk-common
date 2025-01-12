@@ -30,8 +30,6 @@ declare(strict_types=1);
 namespace Tests\CommonSDK\Concerns\Fixtures;
 
 use CommonSDK\Concerns\ObjectPropertyRead;
-use CommonSDK\Concerns\PropertyRead;
-use CommonSDK\Concerns\PropertyWrite;
 use CommonSDK\Contracts\Property;
 
 /**

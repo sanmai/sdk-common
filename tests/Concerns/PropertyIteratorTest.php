@@ -30,7 +30,6 @@ declare(strict_types=1);
 namespace Tests\CommonSDK\Concerns;
 
 use CommonSDK\Concerns\PropertyIterator;
-use IteratorAggregate;
 use PHPUnit\Framework\TestCase;
 
 /**

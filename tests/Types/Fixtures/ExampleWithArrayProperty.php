@@ -29,12 +29,8 @@ declare(strict_types=1);
 
 namespace Tests\CommonSDK\Types\Fixtures;
 
-use CommonSDK\Concerns\MagicSetters;
 use CommonSDK\Concerns\ObjectPropertyRead;
-use CommonSDK\Concerns\RequestCore;
-use CommonSDK\Contracts\JsonRequest;
 use CommonSDK\Types\ArrayProperty;
-use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation as JMS;
 
 /**
@@ -45,12 +41,10 @@ final class ExampleWithArrayProperty
     use ObjectPropertyRead;
 
     /**
-     * @JMS\Type("ArrayCollection<int>")
-     *
-     * @JMS\SkipWhenEmpty
-     *
      * @var ArrayProperty<int>
      */
+    #[JMS\Type('ArrayCollection<int>')]
+    #[JMS\SkipWhenEmpty]
     private $ids;
 
     public function __construct()
