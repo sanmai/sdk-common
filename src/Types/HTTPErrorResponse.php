@@ -35,6 +35,9 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 use Symfony\Component\HttpFoundation\Response as HttpResponse;
 
+/**
+ * @psalm-suppress MoreSpecificReturnType
+ */
 final class HTTPErrorResponse implements Response, ResponseInterface
 {
     private ResponseInterface $response;

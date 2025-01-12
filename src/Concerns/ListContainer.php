@@ -89,7 +89,7 @@ trait ListContainer
         return new \ArrayIterator($this->list);
     }
 
-    public function count()
+    public function count(): int
     {
         return \count($this->list);
     }

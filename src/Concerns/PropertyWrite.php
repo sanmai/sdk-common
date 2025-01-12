@@ -36,7 +36,7 @@ trait PropertyWrite
     /**
      * @final
      */
-    public function __set(string $property, $value)
+    public function __set(string $property, mixed $value)
     {
         if (method_exists($this, 'set'.$property)) {
             $this->{'set'.$property}($value);
