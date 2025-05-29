@@ -9,7 +9,7 @@
 composer require sanmai/sdk-common
 ```
 
-This SDK-for-SDKs requires at least PHP 8.1.
+This SDK-for-SDKs requires at least PHP 8.2.
 
 ## License
 
