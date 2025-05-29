@@ -29,6 +29,7 @@ declare(strict_types=1);
 
 namespace CommonSDK\Tests\Common;
 
+use ColinODell\PsrTestLogger\TestLogger;
 use CommonSDK\Contracts\HasErrorCode;
 use CommonSDK\Contracts\Request;
 use CommonSDK\Contracts\Response;
@@ -44,7 +45,6 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 use Psr\Log\LogLevel;
-use Psr\Log\Test\TestLogger;
 
 abstract class ClientTestCase extends TestCase implements Concerns\ClientTestCase
 {

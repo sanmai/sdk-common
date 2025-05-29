@@ -18,7 +18,7 @@ jobs:
          - '8.4'
         dependencies: ['']
         include:
-          - { php-version: '8.1', dependencies: '' }
+          - { php-version: '8.2', dependencies: '--prefer-lowest' }
 
     name: PHP ${{ matrix.php-version }} ${{ matrix.dependencies }}
 

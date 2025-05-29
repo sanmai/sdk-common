@@ -29,6 +29,7 @@ declare(strict_types=1);
 
 namespace Tests\CommonSDK\Types;
 
+use ColinODell\PsrTestLogger\TestLogger;
 use CommonSDK\Contracts\Request;
 use CommonSDK\Contracts\Response;
 use CommonSDK\Tests\Common\ClientTestCase;
@@ -43,7 +44,6 @@ use function Pipeline\take;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LogLevel;
-use Psr\Log\Test\TestLogger;
 use Tests\CommonSDK\Types\Fixtures\ExampleJsonParamRequest;
 use Tests\CommonSDK\Types\Fixtures\ExampleJsonRequest;
 use Tests\CommonSDK\Types\Fixtures\ExampleParamRequest;
