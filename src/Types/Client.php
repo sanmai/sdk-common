@@ -201,7 +201,7 @@ abstract class Client implements ClientContract
 
         return 0 === strpos(
             $response->getHeader(self::CONTENT_DISPOSITION)[0],
-            self::CONTENT_DISPOSITION_ATTACHEMENT,
+            self::CONTENT_DISPOSITION_ATTACHMENT,
         );
     }
 
@@ -264,7 +264,7 @@ abstract class Client implements ClientContract
         return [];
     }
 
-    private const CONTENT_DISPOSITION_ATTACHEMENT = 'attachment';
+    private const CONTENT_DISPOSITION_ATTACHMENT = 'attachment';
     private const JSON_CONTENT_TYPE = 'application/json';
     private const OCTET_STREAM_TYPE = 'application/octet-stream';
     private const CONTENT_TYPE = 'Content-Type';
