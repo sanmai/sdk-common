@@ -27,7 +27,7 @@
         "infection/infection": "^0.29.14",
         "phan/phan": "^5.4.5",
         "php-coveralls/php-coveralls": "^2.8.0",
-        "phpstan/phpstan": "^1.12.27",
+        "phpstan/phpstan": "^1.12.27 || ^2.0.0",
         "phpunit/phpunit": "^9.6.23",
         "psr/log": "^2 || ^3",
         "symfony/http-foundation": "^5.4.49 || ^6.4.21 || ^7.2.6",
