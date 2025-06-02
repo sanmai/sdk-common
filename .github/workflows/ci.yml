@@ -13,40 +13,37 @@ jobs:
     strategy:
       matrix:
         php-version:
-         - '8.2'
-         - '8.3'
-         - '8.4'
-        dependencies: ['']
+          - '8.2'
+          - '8.3'
+          - '8.4'
+        dependencies:
+          - highest
         include:
-          - { php-version: '8.2', dependencies: '--prefer-lowest' }
+          - php-version: '8.2'
+            dependencies: lowest
 
     name: PHP ${{ matrix.php-version }} ${{ matrix.dependencies }}
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php-version }}
-          extensions:
           coverage: pcov
           tools: composer:v2
 
-      - name: Cache dependencies
-        uses: actions/cache@v3
-        with:
-          path: ~/.cache/composer
-          key: composer-${{ matrix.php-version }}-${{ hashFiles('**/composer.*') }}-${{ matrix.dependencies }}
-          restore-keys: |
-            composer-${{ matrix.php-version }}-${{ hashFiles('**/composer.*') }}-
-            composer-${{ matrix.php-version }}-
-            composer-
+      - name: Validate composer.json
+        run: |
+          composer validate --strict
 
       - name: Install dependencies
-        run: |
-          composer update --prefer-dist --no-interaction --no-progress ${{ matrix.dependencies }}
+        uses: ramsey/composer-install@v3
+        with:
+          dependency-versions: ${{ matrix.dependencies }}
+          composer-options: '--prefer-dist'
 
       - name: Execute tests
         run: |
@@ -59,7 +56,6 @@ jobs:
         run: |
           php vendor/bin/php-coveralls -v
 
-      - name: Validate composer.json
+      - name: Show the results of normalizing composer.json
         run: |
-          composer validate --strict
           composer normalize --diff --dry-run
