@@ -33,12 +33,11 @@ jobs:
         with:
           php-version: ${{ matrix.php-version }}
           coverage: pcov
-          tools: composer:v2,composer-normalize
+          tools: composer:v2
 
       - name: Validate composer.json
         run: |
           composer validate --strict
-          composer-normalize --diff --dry-run
 
       - name: Install dependencies
         uses: ramsey/composer-install@v3
@@ -56,3 +55,7 @@ jobs:
           COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           php vendor/bin/php-coveralls -v
+
+      - name: Show the results of normalizing composer.json
+        run: |
+          composer normalize --diff --dry-run
