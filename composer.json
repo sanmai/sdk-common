@@ -18,7 +18,7 @@
         "guzzlehttp/guzzle": "^6.5.8 || ^7.9.3",
         "psr/http-message": "^2.0",
         "sanmai/json-serializer": "^0.2.7",
-        "sanmai/pipeline": "^6.14"
+        "sanmai/pipeline": "^6.14 || ^7.0"
     },
     "require-dev": {
         "colinodell/psr-testlogger": "^1.3",
