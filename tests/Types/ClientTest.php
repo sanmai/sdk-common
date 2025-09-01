@@ -105,7 +105,7 @@ class ClientTest extends ClientTestCase
         $request = new ExampleParamRequest();
         $response = $client->sendExampleParamRequest($request);
 
-        /** @var $response ExampleResponse */
+        /** @var ExampleResponse $response */
         $this->assertInstanceOf(ExampleResponse::class, $response);
 
         $this->assertSame(3, $this->countRecordsWithLevel($logger, LogLevel::DEBUG));
@@ -134,7 +134,7 @@ class ClientTest extends ClientTestCase
 
         $response = $client->sendExampleJsonRequest($request);
 
-        /** @var $response ExampleResponse */
+        /** @var ExampleResponse $response */
         $this->assertInstanceOf(ExampleResponse::class, $response);
 
         $this->assertSame(4, $this->countRecordsWithLevel($logger, LogLevel::DEBUG));
