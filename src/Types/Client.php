@@ -67,7 +67,7 @@ abstract class Client implements ClientContract
     }
 
     /**
-     * @see \CommonSDK\Contracts\Client::sendRequest()
+     * @see ClientContract::sendRequest()
      *
      * @return Response
      */
